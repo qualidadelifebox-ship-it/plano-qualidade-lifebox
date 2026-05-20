@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Ação de Qualidade — Lifebox Brasil</title>
+<style>
+  :root{
+    --verde:#0f5132; --verde-claro:#198754; --verde-bg:#e8f3ec;
+    --ouro:#c8a02e; --prata:#8a8d91; --bronze:#a9663d;
+    --tinta:#1a1f1c; --papel:#f4f1ea; --cartao:#ffffff;
+    --borda:#d8d4c8; --suave:#f9f7f2;
+    --pendente:#b54a3a; --andamento:#c8901f; --concluido:#198754;
+    --sombra:0 1px 3px rgba(26,31,28,.08),0 8px 24px rgba(26,31,28,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',-apple-system,Roboto,sans-serif;
+    background:var(--papel); color:var(--tinta);
+    font-size:14px; line-height:1.5;
+  }
+  header{
+    background:linear-gradient(135deg,#0f5132 0%,#1a6e44 100%);
+    color:#fff; padding:22px 32px;
+    display:flex; align-items:center; gap:18px;
+    box-shadow:var(--sombra);
+  }
+  .logo{
+    width:46px;height:46px;border-radius:12px;
+    background:#fff;color:var(--verde);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:20px;letter-spacing:-1px;flex-shrink:0;
+  }
+  header h1{font-size:19px;font-weight:700;letter-spacing:-.3px}
+  header p{font-size:12.5px;opacity:.85;font-weight:400}
+  .ciclo{margin-left:auto;text-align:right;font-size:12px;opacity:.9}
+  .ciclo strong{font-size:15px;display:block}
+
+  nav{
+    display:flex;gap:2px;padding:0 20px;background:var(--cartao);
+    border-bottom:2px solid var(--borda);overflow-x:auto;
+  }
+  nav button{
+    border:none;background:none;cursor:pointer;
+    padding:13px 16px;font-size:13px;font-weight:600;
+    color:#6b6f6c;border-bottom:3px solid transparent;
+    white-space:nowrap;transition:all .15s;font-family:inherit;
+  }
+  nav button:hover{color:var(--verde);background:var(--suave)}
+  nav button.ativo{color:var(--verde);border-bottom-color:var(--verde-claro)}
+
+  main{padding:24px 32px;max-width:1500px;margin:0 auto}
+  .tab{display:none}
+  .tab.ativo{display:block;animation:fade .25s}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* DASHBOARD */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px}
+  .kpi{
+    background:var(--cartao);border:1px solid var(--borda);border-radius:14px;
+    padding:18px 20px;box-shadow:var(--sombra);position:relative;overflow:hidden;
+  }
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--verde-claro)}
+  .kpi.alerta::before{background:var(--pendente)}
+  .kpi.atencao::before{background:var(--andamento)}
+  .kpi .rotulo{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:#73776f;font-weight:700}
+  .kpi .valor{font-size:30px;font-weight:800;margin-top:6px;letter-spacing:-1px}
+  .kpi .sub{font-size:11.5px;color:#8a8d85;margin-top:2px}
+
+  .secao-titulo{
+    font-size:15px;font-weight:700;color:var(--verde);
+    margin:26px 0 14px;display:flex;align-items:center;gap:8px;
+  }
+  .secao-titulo::before{content:"";width:18px;height:3px;background:var(--ouro);border-radius:2px}
+
+  .grid-lojas{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .card-loja{
+    background:var(--cartao);border:1px solid var(--borda);border-radius:14px;
+    padding:18px;box-shadow:var(--sombra);cursor:pointer;transition:transform .15s,box-shadow .15s;
+  }
+  .card-loja:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(26,31,28,.13)}
+  .card-loja h3{font-size:15px;color:var(--verde);margin-bottom:4px}
+  .card-loja .meta-loja{font-size:11.5px;color:#8a8d85;margin-bottom:12px}
+  .barra{height:9px;background:#eceae2;border-radius:6px;overflow:hidden;margin:8px 0}
+  .barra span{display:block;height:100%;border-radius:6px;transition:width .4s}
+  .linha-stat{display:flex;justify-content:space-between;font-size:12px;margin-top:4px}
+  .badge{
+    display:inline-block;padding:3px 10px;border-radius:20px;
+    font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+  }
+  .b-ouro{background:#faf2d4;color:#9a7b14}
+  .b-prata{background:#ececec;color:#5f6266}
+  .b-bronze{background:#f0ddd0;color:#8a4f2c}
+  .b-critico{background:#f7dcd7;color:#9a3527}
+
+  /* TABELA */
+  .ferramentas{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .ferramentas input,.ferramentas select{
+    padding:8px 12px;border:1px solid var(--borda);border-radius:8px;
+    font-size:13px;font-family:inherit;background:var(--cartao);
+  }
+  .ferramentas input{flex:1;min-width:180px}
+  .btn{
+    padding:8px 16px;border-radius:8px;border:none;cursor:pointer;
+    font-size:12.5px;font-weight:700;font-family:inherit;transition:opacity .15s;
+  }
+  .btn:hover{opacity:.88}
+  .btn-verde{background:var(--verde);color:#fff}
+  .btn-ouro{background:var(--ouro);color:#fff}
+  .resumo-loja{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;margin-bottom:18px;
+  }
+  .mini-kpi{
+    background:var(--cartao);border:1px solid var(--borda);border-radius:11px;padding:13px 16px;
+  }
+  .mini-kpi .r{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:#73776f;font-weight:700}
+  .mini-kpi .v{font-size:22px;font-weight:800;margin-top:2px}
+
+  .tabela-wrap{
+    background:var(--cartao);border:1px solid var(--borda);border-radius:12px;
+    overflow:auto;box-shadow:var(--sombra);
+  }
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  thead th{
+    background:var(--verde);color:#fff;font-weight:600;
+    padding:11px 9px;text-align:left;position:sticky;top:0;
+    font-size:11px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;
+  }
+  tbody td{padding:9px;border-bottom:1px solid #ecebe4;vertical-align:top}
+  tbody tr:hover{background:var(--suave)}
+  .col-acao{font-weight:700;color:var(--verde);min-width:170px}
+  .col-desc{min-width:240px;color:#4a4e49;font-size:11.5px}
+  .cat-tag{
+    display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;
+    font-weight:700;background:var(--verde-bg);color:var(--verde);white-space:nowrap;
+  }
+  select.status-sel{
+    border:1px solid var(--borda);border-radius:6px;padding:4px 6px;
+    font-size:11.5px;font-family:inherit;font-weight:700;cursor:pointer;
+  }
+  .st-Pendente{color:var(--pendente)}
+  .st-Em.andamento,.st-andamento{color:var(--andamento)}
+  .st-Concluído{color:var(--concluido)}
+
+  .checks{display:flex;gap:4px}
+  .checks label{
+    width:24px;height:24px;border:1.5px solid var(--borda);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    font-size:11px;font-weight:700;color:#aab;transition:all .12s;background:#fff;
+  }
+  .checks input{display:none}
+  .checks input:checked+span{background:var(--verde-claro);color:#fff;border-color:var(--verde-claro)}
+  .checks label span{
+    width:100%;height:100%;border-radius:5px;display:flex;
+    align-items:center;justify-content:center;
+  }
+  .exec-cel{min-width:90px}
+  .exec-num{font-weight:800;font-size:14px}
+  .barra-mini{height:6px;background:#eceae2;border-radius:4px;margin-top:3px;overflow:hidden}
+  .barra-mini span{display:block;height:100%}
+  textarea.obs{
+    width:100%;min-width:160px;border:1px solid var(--borda);border-radius:6px;
+    padding:5px 7px;font-size:11.5px;font-family:inherit;resize:vertical;min-height:38px;
+  }
+  .foto-cel{min-width:120px}
+  .foto-btn{
+    font-size:10.5px;padding:5px 9px;border:1px dashed var(--verde-claro);
+    border-radius:7px;background:var(--verde-bg);color:var(--verde);
+    cursor:pointer;font-weight:700;display:inline-block;
+  }
+  .foto-thumb{
+    margin-top:5px;display:block;max-width:100px;max-height:70px;
+    border-radius:6px;border:1px solid var(--borda);
+  }
+  .foto-nome{font-size:10px;color:#8a8d85;margin-top:3px;word-break:break-all}
+
+  footer{
+    text-align:center;padding:22px;font-size:11.5px;color:#9a9d96;
+    border-top:1px solid var(--borda);margin-top:30px;
+  }
+  .legenda{
+    display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;
+    color:#6b6f6c;margin-bottom:14px;
+  }
+  .legenda b{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+  .ponto{width:10px;height:10px;border-radius:3px;display:inline-block}
+  @media(max-width:680px){
+    main{padding:16px}header{padding:16px}
+    .ciclo{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">LB</div>
+  <div>
+    <h1>Plano de Ação de Qualidade</h1>
+    <p>Lifebox Brasil · Departamento de Qualidade, Nutrição e Auditoria</p>
+  </div>
+  <div class="ciclo">
+    Ciclo de Conformidade
+    <strong>Maio / Junho 2026</strong>
+  </div>
+</header>
+
+<nav id="nav"></nav>
+
+<main>
+  <!-- DASHBOARD -->
+  <section class="tab ativo" id="tab-dashboard">
+    <div class="kpis" id="kpis-geral"></div>
+
+    <div class="secao-titulo">Status por Unidade</div>
+    <div class="legenda">
+      <b><span class="ponto" style="background:var(--concluido)"></span> Concluído</b>
+      <b><span class="ponto" style="background:var(--andamento)"></span> Em andamento</b>
+      <b><span class="ponto" style="background:var(--pendente)"></span> Pendente / Atrasado</b>
+      <b>Medalha: <span class="badge b-ouro">Ouro ≥90%</span> <span class="badge b-prata">Prata 85–89%</span> <span class="badge b-bronze">Bronze 75–84%</span></b>
+    </div>
+    <div class="grid-lojas" id="grid-lojas"></div>
+  </section>
+</main>
+
+<footer>
+  Planilha gerada com base no Plano de Ação por Unidade · Os dados ficam salvos neste navegador ·
+  Use <b>Exportar CSV</b> para registrar evidências e enviar à matriz · Lifebox Brasil 2026
+</footer>
+
+<script>
+const DADOS = {"unidades": [{"nome": "Setor Oeste", "acoes": [{"acao": "Implantação do kit de limpeza e processo de diluição", "descricao": "Definir kit padrão de limpeza por unidade.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal e Trainee", "frequencia": "Mensal", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Implantação do kit de limpeza e processo de diluição", "descricao": "Criar POP de diluição com dosagem por produto.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal", "frequencia": "Mensal", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Implantação do kit de limpeza e processo de diluição", "descricao": "Treinar manipuladores no uso correto.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal e Trainee", "frequencia": "Mensal", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Implantação do kit de limpeza e processo de diluição", "descricao": "Auditar aplicação na visita semanal.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal e Trainee", "frequencia": "Semanal", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Implantação do kit de limpeza e processo de diluição", "descricao": "Afixar tabela de diluição em ponto visível.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal", "frequencia": "Única vez", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Atualização e acompanhamento das planilhas de limpeza", "descricao": "Revisar planilhas de todos os SG da unidade.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal e Trainee", "frequencia": "Única vez", "prazo": "15/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Atualização e acompanhamento das planilhas de limpeza", "descricao": "Estabelecer frequência de preenchimento.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal", "frequencia": "Única vez", "prazo": "15/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Atualização e acompanhamento das planilhas de limpeza", "descricao": "Inserir no checklist do fiscal.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal e Trainee", "frequencia": "Semanal", "prazo": "15/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Atualização e acompanhamento das planilhas de limpeza", "descricao": "Avaliar conformidade nas visitas semanais.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal", "frequencia": "Semanal", "prazo": "15/06/2026", "status": "Pendente", "exec": 0}]}, {"nome": "Jardim Goiás", "acoes": [{"acao": "Reorganização e identificação do estoque", "descricao": "Reorganizar por gênero (embalagens, bebidas, bar, cozinha).", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Estoquista | Trainee", "frequencia": "Única vez", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Reorganização e identificação do estoque", "descricao": "Identificar prateleiras com placas.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Estoquista | Trainee", "frequencia": "Única vez", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Reorganização e identificação do estoque", "descricao": "Criar mapa de localização e identificação de etiqueta.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Estoquista | Trainee", "frequencia": "Única vez", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Contratação de manutentor por loja", "descricao": "Mapear necessidades de manutenção preventiva. Elaborar descritivo do cargo. Encaminhar ao RH. Acompanhar processo seletivo. Integrar ao sistema de checklists preventivos.", "categoria": "RH / Manutenção", "responsavel": "RH e Sócia", "frequencia": "Única vez", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Regularização da documentação pendente", "descricao": "Levantar lista completa de documentos vencidos ou ausentes (alvará, AVCB, laudo de pragas, análise de água, BPF, POPs). Priorizar por criticidade. Executar renovações. Arquivar e registrar validades no sistema.", "categoria": "Documentação", "responsavel": "Fiscal | Sócia e Trainee", "frequencia": "Única vez", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}]}, {"nome": "Águas Claras", "acoes": [{"acao": "Atualização dos POPs", "descricao": "Revisar todos os POPs vigentes. Adequar à realidade operacional atual. Validar com a equipe. Imprimir versão atualizada. Arquivar na loja e no Google Drive. Registrar data de revisão.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal", "frequencia": "Mensal", "prazo": "15/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Controle de temperatura e prevenção de cruzamento térmico", "descricao": "Criar lembretes (folders, cartazes) e ações com curiosidades do departamento para reforçar a importância dos processos de controle de qualidade. Enviar nos grupos de WhatsApp da loja.", "categoria": "Segurança Alimentar", "responsavel": "Fiscal | Trainee", "frequencia": "Semanal", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Instalação de tampas, telas e proteções", "descricao": "Instalar tampas nos filtros e bebedouros. Colocar telas nos exaustores.", "categoria": "Manutenção / BPF", "responsavel": "Trainee", "frequencia": "Única vez", "prazo": "15/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Continuidade da limpeza e separação do Mercado Livre", "descricao": "Manter cronograma de faxina geral. Garantir que produtos de delivery (ML) permaneçam separados e identificados. Revisar fluxo com a equipe. Auditar na visita semanal.", "categoria": "Qualidade / Delivery", "responsavel": "Fiscal | Trainee", "frequencia": "Diária", "prazo": "Contínuo", "status": "Pendente", "exec": 0}]}, {"nome": "Savassi", "acoes": [{"acao": "Ronda semanal de apontamento de conformidade", "descricao": "Estabelecer ronda semanal pelo fiscal ou responsável interno. Documentar apontamentos em formulário padrão. Repassar no grupo de Qualidade. Gerar lista de pendências antes da próxima visita.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal", "frequencia": "Semanal", "prazo": "Contínuo", "status": "Pendente", "exec": 0}, {"acao": "Mini treinamentos nas reuniões de retaguarda", "descricao": "Realizar dinâmicas da qualidade como mini treinamento semanalmente. Alternar temas por semana: temperatura, higiene, FIFO, alergênicos. Registrar presença e tema no Vuca. Avaliar absorção mensalmente.", "categoria": "Treinamento", "responsavel": "Fiscal | Sócio", "frequencia": "Semanal", "prazo": "Contínuo", "status": "Pendente", "exec": 0}, {"acao": "Encontro mensal de qualidade", "descricao": "Realizar o encontro com Qualidade, tirar dúvidas dos colaboradores e realizar dinâmicas.", "categoria": "Gestão", "responsavel": "Fiscal | Sócio", "frequencia": "Mensal", "prazo": "Contínuo", "status": "Pendente", "exec": 0}]}, {"nome": "Lago Sul", "acoes": [{"acao": "Execução das planilhas de temperatura e limpeza", "descricao": "Realizar a conferência e executar junto do responsável por turno o preenchimento das planilhas de temperatura e limpeza.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Trainee", "frequencia": "Diária", "prazo": "Contínuo", "status": "Pendente", "exec": 0}, {"acao": "Reunião semanal por setores", "descricao": "Realizar reunião semanal por setor (cozinha, salão, delivery) com pauta de qualidade e elaborar ações que geram impacto no departamento. Acompanhar execução e apresentar resultados no encontro semanal.", "categoria": "Gestão", "responsavel": "Fiscal | Trainee", "frequencia": "Semanal", "prazo": "Contínuo", "status": "Pendente", "exec": 0}, {"acao": "Uso de balança para controle de porções", "descricao": "Implantar uso obrigatório de balança na montagem de fritas, sobremesas e demais itens indicados. Padronizar gramagem conforme ficha técnica. Treinar equipe. Auditar nas visitas.", "categoria": "Nutrição / Qualidade", "responsavel": "Fiscal | Trainee", "frequencia": "Diária", "prazo": "Contínuo", "status": "Pendente", "exec": 0}, {"acao": "Implantação de borrifadores com solução higienizante", "descricao": "Preparar borrifadores com solução de água sanitária diluída (conforme POP). Disponibilizar na cozinha para uso noturno. Treinar sobre concentração correta e tempo de contato. Verificar reposição diária.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Trainee", "frequencia": "Diária", "prazo": "Contínuo", "status": "Pendente", "exec": 0}]}, {"nome": "Campinas", "acoes": [{"acao": "Acompanhamento prático com o fiscal", "descricao": "Acompanhamento prático juntamente com o fiscal (acompanhar supervisão técnica e treinamentos).", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Sócio", "frequencia": "Semanal", "prazo": "30/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Reunião semanal com fiscal e trainee", "descricao": "Realizar reunião semanal com fiscal e definir ações práticas para a semana seguinte.", "categoria": "Gestão / Auditoria", "responsavel": "Nutricionista", "frequencia": "Semestral", "prazo": "30/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Treinamento e acompanhamento", "descricao": "Realizar o encontro com Qualidade, tirar dúvidas dos colaboradores e realizar dinâmicas.", "categoria": "Treinamento", "responsavel": "Fiscal", "frequencia": "Mensal", "prazo": "Contínuo", "status": "Pendente", "exec": 0}]}, {"nome": "Buritis", "acoes": [{"acao": "Faxina geral na loja", "descricao": "Organizar mutirão de limpeza profunda com toda a equipe. Seguir cronograma por área: câmaras, estoque, cozinha, salão, banheiros.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Sócia", "frequencia": "Quinzenal", "prazo": "20/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Organização das caixas de cozinha", "descricao": "Realizar faxina nas caixas de armazenamento das câmaras. Criar cronograma de higienização de caixas por setor.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Sócia", "frequencia": "Quinzenal", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}, {"acao": "Retomada das rondas de controle de desperdício", "descricao": "Reativar rondas diárias de desperdício. Designar responsável por turno. Registrar na planilha de perdas. Acompanhar % sobre faturamento (meta: <= 3,5%). Gerar relatório semanal para a gerência.", "categoria": "Qualidade / Financeiro", "responsavel": "Gerente de loja", "frequencia": "Diária", "prazo": "Contínuo", "status": "Pendente", "exec": 0}, {"acao": "Treinamento prático para preenchimento das planilhas", "descricao": "Realizar treinamento com dinâmica com cada colaborador sobre planilhas de temperatura, limpeza e recebimento. Simular situações reais. Avaliar com exercício prático.", "categoria": "Treinamento", "responsavel": "Fiscal", "frequencia": "Semanal", "prazo": "31/05/2026", "status": "Pendente", "exec": 0}]}, {"nome": "Ribeirão Preto", "acoes": [{"acao": "Ronda diária de controle de desperdício", "descricao": "Implantar ronda diária estruturada. Definir responsável por turno. Registrar na planilha de perdas. Calcular % semanal sobre faturamento. Apresentar no fechamento semanal. Meta: <= 3,5%.", "categoria": "Qualidade / BPF", "responsavel": "Fiscal | Sócio", "frequencia": "Diária", "prazo": "Contínuo", "status": "Pendente", "exec": 0}, {"acao": "Treinamento de combate a incêndio e primeiros socorros", "descricao": "Realizar treinamento prático com toda a equipe — Combate a Incêndio e Primeiros Socorros. Registrar presença e carga horária em planilha e no VUCA. Programar próximo em 6 meses.", "categoria": "Treinamento / Legal", "responsavel": "Fiscal | Sócio", "frequencia": "Semestral", "prazo": "30/06/2026", "status": "Pendente", "exec": 0}, {"acao": "Controle intensificado do recebimento da unidade de compras", "descricao": "Intensificar conferência no recebimento de produtos de Campinas: peso, temperatura, validade, embalagem e NF. Designar responsável fixo. Preencher planilha a cada entrega. Gerar não conformidade para desvios. Reportar fornecedor à matriz.", "categoria": "Segurança Alimentar", "responsavel": "Fiscal | Sócio", "frequencia": "Diária", "prazo": "Contínuo", "status": "Pendente", "exec": 0}]}]};
+
+/* ---------- estado persistente ---------- */
+const KEY='lifebox_plano_v2';
+let estado = JSON.parse(localStorage.getItem(KEY) || 'null');
+if(!estado){
+  estado={};
+  DADOS.unidades.forEach(u=>{
+    estado[u.nome]=u.acoes.map(a=>({
+      ...a,
+      sem:[false,false,false,false],
+      obs:'',
+      foto:null,
+      status:a.exec>=100?'Concluído':a.status
+    }));
+  });
+}
+function salvar(){localStorage.setItem(KEY,JSON.stringify(estado));}
+
+/* ---------- cálculos ---------- */
+function execLinha(it){
+  // execução = média dos checks marcados * peso, ou exec manual se sem checks
+  const marcados=it.sem.filter(Boolean).length;
+  const porCheck=Math.round(marcados/4*100);
+  return Math.max(porCheck,it.statusExecBase||0);
+}
+function pctLoja(nome){
+  const its=estado[nome];
+  if(!its.length)return{exec:0,concl:0,atras:0,total:0,andam:0};
+  let somaExec=0,concl=0,atras=0,andam=0;
+  its.forEach(it=>{
+    somaExec+=it.exec;
+    if(it.status==='Concluído')concl++;
+    else if(it.status==='Em andamento')andam++;
+    else atras++;
+  });
+  return{
+    exec:Math.round(somaExec/its.length),
+    concl:Math.round(concl/its.length*100),
+    atras:Math.round(atras/its.length*100),
+    andam:Math.round(andam/its.length*100),
+    total:its.length, qConcl:concl, qAtras:atras, qAndam:andam
+  };
+}
+function medalha(p){
+  if(p>=90)return['Ouro','b-ouro'];
+  if(p>=85)return['Prata','b-prata'];
+  if(p>=75)return['Bronze','b-bronze'];
+  return['Crítico','b-critico'];
+}
+function corStatus(p){
+  if(p>=90)return'var(--concluido)';
+  if(p>=50)return'var(--andamento)';
+  return'var(--pendente)';
+}
+
+/* ---------- navegação ---------- */
+const nav=document.getElementById('nav');
+const main=document.querySelector('main');
+function montarNav(){
+  let html='<button class="ativo" data-t="dashboard">📊 Dashboard Geral</button>';
+  DADOS.unidades.forEach(u=>{
+    html+=`<button data-t="${u.nome}">${u.nome}</button>`;
+  });
+  nav.innerHTML=html;
+  nav.querySelectorAll('button').forEach(b=>{
+    b.onclick=()=>abrir(b.dataset.t,b);
+  });
+}
+function abrir(t,btn){
+  nav.querySelectorAll('button').forEach(x=>x.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('ativo'));
+  if(t==='dashboard'){
+    document.getElementById('tab-dashboard').classList.add('ativo');
+    renderDashboard();
+  }else{
+    let el=document.getElementById('tab-'+cssId(t));
+    el.classList.add('ativo');
+    renderLoja(t);
+  }
+}
+const cssId=s=>s.replace(/[^a-z0-9]/gi,'_');
+
+/* ---------- dashboard ---------- */
+function renderDashboard(){
+  const nomes=Object.keys(estado);
+  let totIt=0,somaExec=0,concl=0,atras=0,andam=0;
+  nomes.forEach(n=>{
+    const p=pctLoja(n);
+    totIt+=p.total;somaExec+=p.exec;
+    concl+=p.qConcl;atras+=p.qAtras;andam+=p.qAndam;
+  });
+  const execMedia=Math.round(somaExec/nomes.length);
+  const pctConcl=Math.round(concl/totIt*100);
+  const pctAtras=Math.round(atras/totIt*100);
+  const lojasOk=nomes.filter(n=>pctLoja(n).exec>=75).length;
+
+  document.getElementById('kpis-geral').innerHTML=`
+    <div class="kpi"><div class="rotulo">Execução Geral</div>
+      <div class="valor" style="color:${corStatus(execMedia)}">${execMedia}%</div>
+      <div class="sub">média das ${nomes.length} unidades</div></div>
+    <div class="kpi"><div class="rotulo">Tarefas Concluídas</div>
+      <div class="valor" style="color:var(--concluido)">${pctConcl}%</div>
+      <div class="sub">${concl} de ${totIt} ações</div></div>
+    <div class="kpi atencao"><div class="rotulo">Em Andamento</div>
+      <div class="valor" style="color:var(--andamento)">${andam}</div>
+      <div class="sub">ações em execução</div></div>
+    <div class="kpi alerta"><div class="rotulo">Pendentes / Atrasadas</div>
+      <div class="valor" style="color:var(--pendente)">${pctAtras}%</div>
+      <div class="sub">${atras} ações exigem atenção</div></div>
+    <div class="kpi"><div class="rotulo">Unidades em Meta</div>
+      <div class="valor">${lojasOk}/${nomes.length}</div>
+      <div class="sub">≥ 75% de execução (Bronze+)</div></div>
+    <div class="kpi"><div class="rotulo">Total de Ações</div>
+      <div class="valor">${totIt}</div>
+      <div class="sub">no ciclo Maio/Junho</div></div>`;
+
+  // ranking ordenado por execução desc
+  const ranked=[...nomes].sort((a,b)=>pctLoja(b).exec-pctLoja(a).exec);
+  let g='';
+  ranked.forEach(n=>{
+    const p=pctLoja(n);
+    const[med,cls]=medalha(p.exec);
+    g+=`<div class="card-loja" data-loja="${n}">
+      <h3>${n}</h3>
+      <div class="meta-loja">${p.total} ações · ${p.qConcl} concl. · ${p.qAndam} em and. · ${p.qAtras} pend.</div>
+      <span class="badge ${cls}">${med} — ${p.exec}%</span>
+      <div class="barra"><span style="width:${p.exec}%;background:${corStatus(p.exec)}"></span></div>
+      <div class="linha-stat"><span style="color:var(--concluido)">✔ ${p.concl}% concluído</span>
+        <span style="color:var(--pendente)">⚠ ${p.atras}% atrasado</span></div>
+    </div>`;
+  });
+  document.getElementById('grid-lojas').innerHTML=g;
+  document.querySelectorAll('.card-loja').forEach(c=>{
+    c.onclick=()=>{
+      const btn=[...nav.querySelectorAll('button')].find(b=>b.dataset.t===c.dataset.loja);
+      abrir(c.dataset.loja,btn);
+    };
+  });
+}
+
+/* ---------- abas das lojas ---------- */
+function criarAbasLojas(){
+  DADOS.unidades.forEach(u=>{
+    const sec=document.createElement('section');
+    sec.className='tab';
+    sec.id='tab-'+cssId(u.nome);
+    main.appendChild(sec);
+  });
+}
+function renderLoja(nome){
+  const sec=document.getElementById('tab-'+cssId(nome));
+  const its=estado[nome];
+  const p=pctLoja(nome);
+  const[med,cls]=medalha(p.exec);
+  sec.innerHTML=`
+    <div class="secao-titulo">${nome} — Plano de Ação</div>
+    <div class="resumo-loja">
+      <div class="mini-kpi"><div class="r">Execução</div>
+        <div class="v" style="color:${corStatus(p.exec)}">${p.exec}%</div></div>
+      <div class="mini-kpi"><div class="r">Concluídas</div>
+        <div class="v" style="color:var(--concluido)">${p.concl}%</div></div>
+      <div class="mini-kpi"><div class="r">Atrasadas</div>
+        <div class="v" style="color:var(--pendente)">${p.atras}%</div></div>
+      <div class="mini-kpi"><div class="r">Medalha Projetada</div>
+        <div class="v"><span class="badge ${cls}">${med}</span></div></div>
+      <div class="mini-kpi"><div class="r">Total de Ações</div>
+        <div class="v">${p.total}</div></div>
+    </div>
+    <div class="ferramentas">
+      <input type="text" placeholder="🔍 Buscar ação ou categoria..." id="busca-${cssId(nome)}">
+      <select id="filtro-${cssId(nome)}">
+        <option value="">Todos os status</option>
+        <option>Pendente</option><option>Em andamento</option><option>Concluído</option>
+      </select>
+      <button class="btn btn-verde" onclick="exportarLoja('${nome}')">⬇ Exportar CSV desta loja</button>
+    </div>
+    <div class="legenda">
+      <b>Check semanal:</b>
+      <b><span class="ponto" style="background:var(--verde-claro)"></span> marca a semana em que a atividade foi executada</b>
+      <b>· % Execução calculada pelas semanas concluídas</b>
+    </div>
+    <div class="tabela-wrap">
+      <table><thead><tr>
+        <th>Ação</th><th>Descrição</th><th>Categoria</th><th>Responsável</th>
+        <th>Freq.</th><th>Prazo</th><th>Status</th>
+        <th>S1</th><th>S2</th><th>S3</th><th>S4</th>
+        <th>% Exec.</th><th>Observações</th><th>Anexo de Foto</th>
+      </tr></thead><tbody id="corpo-${cssId(nome)}"></tbody></table>
+    </div>`;
+  desenharLinhas(nome);
+  document.getElementById('busca-'+cssId(nome)).oninput=()=>desenharLinhas(nome);
+  document.getElementById('filtro-'+cssId(nome)).onchange=()=>desenharLinhas(nome);
+}
+
+function desenharLinhas(nome){
+  const its=estado[nome];
+  const cssN=cssId(nome);
+  const busca=(document.getElementById('busca-'+cssN).value||'').toLowerCase();
+  const filtro=document.getElementById('filtro-'+cssN).value;
+  const corpo=document.getElementById('corpo-'+cssN);
+  let html='';
+  its.forEach((it,i)=>{
+    if(busca && !(it.acao+it.descricao+it.categoria).toLowerCase().includes(busca))return;
+    if(filtro && it.status!==filtro)return;
+    const checks=it.sem.map((c,s)=>
+      `<label><input type="checkbox" ${c?'checked':''}
+        onchange="marcarSemana('${nome}',${i},${s},this.checked)">
+        <span>${s+1}</span></label>`).join('');
+    const fotoHtml=it.foto
+      ? `<img class="foto-thumb" src="${it.foto}"><div class="foto-nome">anexada ✔</div>`
+      : '';
+    html+=`<tr>
+      <td class="col-acao">${it.acao}</td>
+      <td class="col-desc">${it.descricao}</td>
+      <td><span class="cat-tag">${it.categoria}</span></td>
+      <td>${it.responsavel}</td>
+      <td>${it.frequencia}</td>
+      <td>${it.prazo}</td>
+      <td><select class="status-sel st-${it.status.replace(' ','')}"
+            onchange="mudarStatus('${nome}',${i},this.value)">
+        <option ${it.status==='Pendente'?'selected':''}>Pendente</option>
+        <option ${it.status==='Em andamento'?'selected':''}>Em andamento</option>
+        <option ${it.status==='Concluído'?'selected':''}>Concluído</option>
+      </select></td>
+      <td class="checks">${checks}</td>
+      <td class="exec-cel">
+        <span class="exec-num" style="color:${corStatus(it.exec)}">${it.exec}%</span>
+        <div class="barra-mini"><span style="width:${it.exec}%;background:${corStatus(it.exec)}"></span></div>
+      </td>
+      <td><textarea class="obs" placeholder="Evidência / observação..."
+           onchange="salvarObs('${nome}',${i},this.value)">${it.obs}</textarea></td>
+      <td class="foto-cel">
+        <label class="foto-btn">📷 Anexar foto
+          <input type="file" accept="image/*" style="display:none"
+            onchange="anexarFoto('${nome}',${i},this)"></label>
+        ${fotoHtml}
+      </td>
+    </tr>`;
+  });
+  // separa os 4 checks em células próprias
+  corpo.innerHTML=html.replace(/<td class="checks">([\s\S]*?)<\/td>/g,(m,c)=>{
+    const ls=c.match(/<label>[\s\S]*?<\/label>/g)||[];
+    return ls.map(l=>`<td style="text-align:center">${l}</td>`).join('');
+  });
+}
+
+/* ---------- interações ---------- */
+function recalcExec(it){
+  const marcados=it.sem.filter(Boolean).length;
+  let e=Math.round(marcados/4*100);
+  if(it.status==='Concluído')e=100;
+  if(it.status==='Pendente'&&marcados===0)e=Math.min(e,it.exec>=100?0:it.exec);
+  it.exec=it.status==='Concluído'?100:e;
+}
+function marcarSemana(nome,i,s,val){
+  const it=estado[nome][i];
+  it.sem[s]=val;
+  const m=it.sem.filter(Boolean).length;
+  it.exec=Math.round(m/4*100);
+  if(m===4)it.status='Concluído';
+  else if(m>0&&it.status==='Pendente')it.status='Em andamento';
+  if(it.status==='Concluído')it.exec=100;
+  salvar();renderLoja(nome);
+}
+function mudarStatus(nome,i,val){
+  const it=estado[nome][i];
+  it.status=val;
+  if(val==='Concluído'){it.exec=100;it.sem=[true,true,true,true];}
+  else if(val==='Pendente'){
+    const m=it.sem.filter(Boolean).length;
+    it.exec=Math.round(m/4*100);
+  }else{
+    const m=it.sem.filter(Boolean).length;
+    it.exec=Math.max(Math.round(m/4*100),it.exec===100?0:it.exec);
+  }
+  salvar();renderLoja(nome);
+}
+function salvarObs(nome,i,val){estado[nome][i].obs=val;salvar();}
+function anexarFoto(nome,i,input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{estado[nome][i].foto=e.target.result;salvar();renderLoja(nome);};
+  r.readAsDataURL(f);
+}
+
+/* ---------- exportar CSV ---------- */
+function exportarLoja(nome){
+  const cab=['Unidade','Ação','Descrição','Categoria','Responsável','Frequência','Prazo',
+    'Status','% Execução','Sem 1','Sem 2','Sem 3','Sem 4','Observações','Foto Anexada'];
+  const linhas=[cab];
+  estado[nome].forEach(it=>{
+    linhas.push([nome,it.acao,it.descricao,it.categoria,it.responsavel,it.frequencia,
+      it.prazo,it.status,it.exec+'%',
+      it.sem[0]?'X':'',it.sem[1]?'X':'',it.sem[2]?'X':'',it.sem[3]?'X':'',
+      (it.obs||'').replace(/[\n;]/g,' '),it.foto?'Sim':'Não']);
+  });
+  baixarCSV(linhas,'Plano_Acao_'+cssId(nome)+'.csv');
+}
+function baixarCSV(linhas,nome){
+  const csv='\uFEFF'+linhas.map(l=>l.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=nome;a.click();
+}
+
+/* ---------- init ---------- */
+montarNav();
+criarAbasLojas();
+renderDashboard();
+</script>
+</body>
+</html>
