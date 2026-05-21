@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Gestor — Plano de Ação · Lifebox</title>
+<style>
+  :root{
+    --verde:#0f5132; --verde-claro:#198754; --verde-bg:#e8f3ec;
+    --ouro:#c8a02e; --prata:#8a8d91; --bronze:#a9663d;
+    --tinta:#1a1f1c; --papel:#f4f1ea; --cartao:#fff; --borda:#d8d4c8;
+    --suave:#f9f7f2; --pendente:#b54a3a; --feito:#198754; --naofeito:#c8901f;
+    --sombra:0 1px 3px rgba(26,31,28,.08),0 8px 24px rgba(26,31,28,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',-apple-system,Roboto,sans-serif;
+    background:var(--papel);color:var(--tinta);font-size:14px;line-height:1.5;}
+  header{background:linear-gradient(135deg,#0f5132,#1a6e44);color:#fff;
+    padding:22px 32px;display:flex;align-items:center;gap:18px;box-shadow:var(--sombra);}
+  .logo{width:46px;height:46px;border-radius:12px;background:#fff;color:var(--verde);
+    display:flex;align-items:center;justify-content:center;font-weight:800;
+    font-size:20px;flex-shrink:0;}
+  header h1{font-size:19px;font-weight:700}
+  header p{font-size:12.5px;opacity:.85}
+  .topo-dir{margin-left:auto;display:flex;align-items:center;gap:14px;}
+  .btn-att{padding:9px 16px;border-radius:9px;border:1px solid rgba(255,255,255,.4);
+    background:rgba(255,255,255,.12);color:#fff;font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:inherit;}
+  .att-info{font-size:11px;opacity:.8;text-align:right;}
+  nav{display:flex;gap:2px;padding:0 20px;background:var(--cartao);
+    border-bottom:2px solid var(--borda);overflow-x:auto;}
+  nav button{border:none;background:none;cursor:pointer;padding:13px 16px;
+    font-size:13px;font-weight:600;color:#6b6f6c;border-bottom:3px solid transparent;
+    white-space:nowrap;font-family:inherit;}
+  nav button:hover{color:var(--verde);background:var(--suave)}
+  nav button.ativo{color:var(--verde);border-bottom-color:var(--verde-claro)}
+  main{padding:24px 32px;max-width:1500px;margin:0 auto}
+  .tab{display:none}.tab.ativo{display:block}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:16px;margin-bottom:24px}
+  .kpi{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;
+    padding:18px 20px;box-shadow:var(--sombra);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--verde-claro)}
+  .kpi.alerta::before{background:var(--pendente)}
+  .kpi.atencao::before{background:var(--naofeito)}
+  .kpi .rotulo{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;
+    color:#73776f;font-weight:700}
+  .kpi .valor{font-size:30px;font-weight:800;margin-top:6px}
+  .kpi .sub{font-size:11.5px;color:#8a8d85;margin-top:2px}
+  .secao-titulo{font-size:15px;font-weight:700;color:var(--verde);
+    margin:26px 0 14px;display:flex;align-items:center;gap:8px}
+  .secao-titulo::before{content:"";width:18px;height:3px;background:var(--ouro);
+    border-radius:2px}
+  .grid-lojas{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:16px}
+  .card-loja{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;
+    padding:18px;box-shadow:var(--sombra);cursor:pointer;transition:transform .15s}
+  .card-loja:hover{transform:translateY(-3px)}
+  .card-loja h3{font-size:15px;color:var(--verde);margin-bottom:4px}
+  .card-loja .meta-loja{font-size:11.5px;color:#8a8d85;margin-bottom:12px}
+  .barra{height:9px;background:#eceae2;border-radius:6px;overflow:hidden;margin:8px 0}
+  .barra span{display:block;height:100%;border-radius:6px}
+  .linha-stat{display:flex;justify-content:space-between;font-size:12px;margin-top:4px}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10.5px;
+    font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+  .b-ouro{background:#faf2d4;color:#9a7b14}
+  .b-prata{background:#ececec;color:#5f6266}
+  .b-bronze{background:#f0ddd0;color:#8a4f2c}
+  .b-critico{background:#f7dcd7;color:#9a3527}
+  .legenda{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:#6b6f6c;
+    margin-bottom:14px}
+  .legenda b{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+  .ponto{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .resumo-loja{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;margin-bottom:18px}
+  .mini-kpi{background:var(--cartao);border:1px solid var(--borda);border-radius:11px;
+    padding:13px 16px}
+  .mini-kpi .r{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;
+    color:#73776f;font-weight:700}
+  .mini-kpi .v{font-size:22px;font-weight:800;margin-top:2px}
+  .tabela-wrap{background:var(--cartao);border:1px solid var(--borda);
+    border-radius:12px;overflow:auto;box-shadow:var(--sombra)}
+  table{border-collapse:collapse;width:100%;font-size:12.5px}
+  thead th{background:var(--verde);color:#fff;font-weight:600;padding:11px 9px;
+    text-align:left;position:sticky;top:0;font-size:11px;text-transform:uppercase;
+    white-space:nowrap}
+  tbody td{padding:9px;border-bottom:1px solid #ecebe4;vertical-align:top}
+  tbody tr:hover{background:var(--suave)}
+  .col-acao{font-weight:700;color:var(--verde);min-width:160px}
+  .col-desc{min-width:220px;color:#4a4e49;font-size:11.5px}
+  .cat-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;
+    font-weight:700;background:var(--verde-bg);color:var(--verde);white-space:nowrap}
+  .st-pill{display:inline-block;padding:3px 9px;border-radius:14px;font-size:10.5px;
+    font-weight:700;white-space:nowrap}
+  .st-Feito{background:#d9f0e3;color:#0f5132}
+  .st-Pendente{background:#f7dcd7;color:#9a3527}
+  .st-Nao-feito{background:#faf2d4;color:#9a7b14}
+  .data-cel{font-size:11.5px;color:#4a4e49;white-space:nowrap}
+  .sem-resp{color:#b0b3ab;font-style:italic;font-size:11px}
+  .foto-link{display:inline-block;padding:4px 9px;border-radius:7px;
+    background:var(--verde-bg);color:var(--verde);font-size:10.5px;font-weight:700;
+    text-decoration:none;}
+  .foto-link:hover{background:#d4e8da}
+  .foto-mini{max-width:60px;max-height:44px;border-radius:5px;border:1px solid var(--borda);
+    display:block;margin-top:3px;cursor:pointer}
+  .aviso{padding:14px;border-radius:10px;font-size:13.5px;margin-bottom:14px}
+  .aviso-erro{background:#f7dcd7;color:#9a3527;border:1px solid #e5b0a8}
+  .aviso-carregando{background:#faf2d4;color:#9a7b14;border:1px solid #e8d48a}
+  .config-aviso{background:#fff3cd;border:1px solid #ffd966;color:#856404;
+    padding:16px;border-radius:10px;font-size:13px;margin:24px 32px}
+  footer{text-align:center;padding:22px;font-size:11.5px;color:#9a9d96;
+    border-top:1px solid var(--borda);margin-top:30px}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;
+    align-items:center;justify-content:center;z-index:100;padding:30px}
+  .modal.aberto{display:flex}
+  .modal img{max-width:90%;max-height:90%;border-radius:10px}
+  .modal-fechar{position:absolute;top:20px;right:30px;color:#fff;font-size:34px;
+    cursor:pointer;font-weight:300}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">LB</div>
+  <div>
+    <h1>Painel do Gestor — Plano de Ação</h1>
+    <p>Lifebox Brasil · Departamento de Qualidade, Nutrição e Auditoria</p>
+  </div>
+  <div class="topo-dir">
+    <div class="att-info" id="att-info">—</div>
+    <button class="btn-att" onclick="carregar()">↻ Atualizar agora</button>
+  </div>
+</header>
+
+<div id="config-aviso" class="config-aviso" style="display:none">
+  ⚠ <b>Sistema não conectado.</b> Cole o link do Apps Script (que termina em /exec)
+  no lugar indicado dentro deste arquivo, na linha <code>URL_SCRIPT</code>.
+</div>
+
+<nav id="nav"></nav>
+
+<main>
+  <div id="area-avisos"></div>
+  <section class="tab ativo" id="tab-dashboard">
+    <div class="kpis" id="kpis-geral"></div>
+    <div class="secao-titulo">Status por Unidade</div>
+    <div class="legenda">
+      <b><span class="ponto" style="background:var(--feito)"></span> Feito</b>
+      <b><span class="ponto" style="background:var(--naofeito)"></span> Não feito</b>
+      <b><span class="ponto" style="background:var(--pendente)"></span> Sem resposta</b>
+      <b>Medalha: <span class="badge b-ouro">Ouro ≥90%</span>
+        <span class="badge b-prata">Prata 85–89%</span>
+        <span class="badge b-bronze">Bronze 75–84%</span></b>
+    </div>
+    <div class="grid-lojas" id="grid-lojas"></div>
+  </section>
+</main>
+
+<div class="modal" id="modal-foto" onclick="this.classList.remove('aberto')">
+  <span class="modal-fechar">&times;</span>
+  <img id="modal-img" src="" alt="Foto da evidência">
+</div>
+
+<footer>
+  Painel conectado à Planilha Google · Atualiza com as respostas das lojas em tempo real ·
+  Lifebox Brasil 2026
+</footer>
+
+<script>
+/* =====================================================================
+   >>> COLE AQUI O LINK DO APPS SCRIPT <<<
+   O MESMO link usado na Tela da Loja (termina em /exec).
+   ===================================================================== */
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxuF645LEHg3wsH6XkEVq33NeZPWDa_wX0Xyw-prYW6VUk8Mct4yj084FpiYIxOvILR/exec";
+/* ===================================================================== */
+
+let TODAS = [];
+const $ = id => document.getElementById(id);
+const cssId = s => s.replace(/[^a-z0-9]/gi,'_');
+
+function aviso(t,tipo){ $('area-avisos').innerHTML=
+  '<div class="aviso aviso-'+tipo+'">'+t+'</div>'; }
+function limparAviso(){ $('area-avisos').innerHTML=''; }
+
+async function carregar(){
+  if(URL_SCRIPT.indexOf('COLE_AQUI')===0){
+    $('config-aviso').style.display='block'; return;
+  }
+  aviso('Carregando dados da planilha...','carregando');
+  try{
+    const r = await fetch(URL_SCRIPT+'?acao=listar');
+    const j = await r.json();
+    if(!j.ok){ aviso('Erro: '+j.erro,'erro'); return; }
+    TODAS = j.dados;
+    limparAviso();
+    const agora = new Date();
+    $('att-info').textContent = 'Atualizado às '+
+      agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    montarNav();
+    renderDashboard();
+  }catch(e){
+    aviso('Não foi possível conectar à planilha. Verifique o link do Apps Script.','erro');
+  }
+}
+
+/* ---- cálculos ---- */
+function pctLoja(nome){
+  const its = TODAS.filter(t=>t.unidade===nome);
+  if(!its.length) return {exec:0,feito:0,naofeito:0,semresp:0,total:0,
+    qFeito:0,qNao:0,qSem:0};
+  let f=0,n=0,s=0;
+  its.forEach(t=>{
+    if(t.status==='Feito')f++;
+    else if(t.status==='Nao feito')n++;
+    else s++;
+  });
+  return {
+    exec:Math.round(f/its.length*100),
+    feito:Math.round(f/its.length*100),
+    naofeito:Math.round(n/its.length*100),
+    semresp:Math.round(s/its.length*100),
+    total:its.length, qFeito:f, qNao:n, qSem:s
+  };
+}
+function medalha(p){
+  if(p>=90)return['Ouro','b-ouro'];
+  if(p>=85)return['Prata','b-prata'];
+  if(p>=75)return['Bronze','b-bronze'];
+  return['Crítico','b-critico'];
+}
+function corExec(p){
+  if(p>=90)return'var(--feito)';
+  if(p>=50)return'var(--naofeito)';
+  return'var(--pendente)';
+}
+
+/* ---- navegação ---- */
+function montarNav(){
+  const lojas=[...new Set(TODAS.map(t=>t.unidade))];
+  let h='<button class="ativo" data-t="dashboard">📊 Dashboard Geral</button>';
+  lojas.forEach(l=>{ h+='<button data-t="'+l+'">'+l+'</button>'; });
+  $('nav').innerHTML=h;
+  $('nav').querySelectorAll('button').forEach(b=>{
+    b.onclick=()=>abrir(b.dataset.t,b);
+  });
+  /* cria as abas das lojas */
+  lojas.forEach(l=>{
+    if(!$('tab-'+cssId(l))){
+      const sec=document.createElement('section');
+      sec.className='tab'; sec.id='tab-'+cssId(l);
+      document.querySelector('main').appendChild(sec);
+    }
+  });
+}
+function abrir(t,btn){
+  $('nav').querySelectorAll('button').forEach(x=>x.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('ativo'));
+  if(t==='dashboard'){
+    $('tab-dashboard').classList.add('ativo'); renderDashboard();
+  }else{
+    $('tab-'+cssId(t)).classList.add('ativo'); renderLoja(t);
+  }
+}
+
+/* ---- dashboard ---- */
+function renderDashboard(){
+  const lojas=[...new Set(TODAS.map(t=>t.unidade))];
+  let totIt=0,somaExec=0,f=0,n=0,s=0;
+  lojas.forEach(l=>{
+    const p=pctLoja(l);
+    totIt+=p.total; somaExec+=p.exec;
+    f+=p.qFeito; n+=p.qNao; s+=p.qSem;
+  });
+  const execMedia=Math.round(somaExec/lojas.length);
+  const lojasOk=lojas.filter(l=>pctLoja(l).exec>=75).length;
+  const respondidas=f+n;
+
+  $('kpis-geral').innerHTML=`
+    <div class="kpi"><div class="rotulo">Execução Geral</div>
+      <div class="valor" style="color:${corExec(execMedia)}">${execMedia}%</div>
+      <div class="sub">média das ${lojas.length} unidades</div></div>
+    <div class="kpi"><div class="rotulo">Tarefas Feitas</div>
+      <div class="valor" style="color:var(--feito)">${f}</div>
+      <div class="sub">de ${totIt} ações</div></div>
+    <div class="kpi atencao"><div class="rotulo">Não Feitas</div>
+      <div class="valor" style="color:var(--naofeito)">${n}</div>
+      <div class="sub">respondidas como pendentes</div></div>
+    <div class="kpi alerta"><div class="rotulo">Sem Resposta</div>
+      <div class="valor" style="color:var(--pendente)">${s}</div>
+      <div class="sub">lojas ainda não responderam</div></div>
+    <div class="kpi"><div class="rotulo">Taxa de Resposta</div>
+      <div class="valor">${Math.round(respondidas/totIt*100)}%</div>
+      <div class="sub">${respondidas} de ${totIt} respondidas</div></div>
+    <div class="kpi"><div class="rotulo">Unidades em Meta</div>
+      <div class="valor">${lojasOk}/${lojas.length}</div>
+      <div class="sub">≥ 75% feito (Bronze+)</div></div>`;
+
+  const ranked=[...lojas].sort((a,b)=>pctLoja(b).exec-pctLoja(a).exec);
+  let g='';
+  ranked.forEach(l=>{
+    const p=pctLoja(l);
+    const[med,cls]=medalha(p.exec);
+    g+=`<div class="card-loja" data-loja="${l}">
+      <h3>${l}</h3>
+      <div class="meta-loja">${p.total} ações · ${p.qFeito} feitas ·
+        ${p.qNao} não feitas · ${p.qSem} sem resposta</div>
+      <span class="badge ${cls}">${med} — ${p.exec}%</span>
+      <div class="barra"><span style="width:${p.exec}%;
+        background:${corExec(p.exec)}"></span></div>
+      <div class="linha-stat">
+        <span style="color:var(--feito)">✔ ${p.feito}% feito</span>
+        <span style="color:var(--pendente)">⚠ ${p.semresp}% sem resposta</span></div>
+    </div>`;
+  });
+  $('grid-lojas').innerHTML=g;
+  document.querySelectorAll('.card-loja').forEach(c=>{
+    c.onclick=()=>{
+      const btn=[...$('nav').querySelectorAll('button')]
+        .find(b=>b.dataset.t===c.dataset.loja);
+      abrir(c.dataset.loja,btn);
+    };
+  });
+}
+
+/* ---- aba de uma loja ---- */
+function renderLoja(nome){
+  const sec=$('tab-'+cssId(nome));
+  const its=TODAS.filter(t=>t.unidade===nome);
+  const p=pctLoja(nome);
+  const[med,cls]=medalha(p.exec);
+  let linhas='';
+  its.forEach(t=>{
+    const stClass=(t.status||'Pendente').replace(/\s+/g,'-');
+    let fotoCel='<span class="sem-resp">—</span>';
+    if(t.linkFoto){
+      fotoCel='<a class="foto-link" href="'+t.linkFoto+'" target="_blank">Ver foto</a>'+
+        '<img class="foto-mini" src="'+t.linkFoto+'" '+
+        'onclick="abrirFoto(\''+t.linkFoto+'\')" '+
+        'onerror="this.style.display=\'none\'">';
+    }
+    linhas+=`<tr>
+      <td class="col-acao">${t.acao}</td>
+      <td class="col-desc">${t.descricao}</td>
+      <td><span class="cat-tag">${t.categoria}</span></td>
+      <td>${t.responsavel}</td>
+      <td>${t.prazo}</td>
+      <td><span class="st-pill st-${stClass}">${t.status||'Pendente'}</span></td>
+      <td>${t.respondidoPor||'<span class="sem-resp">—</span>'}</td>
+      <td class="data-cel">${t.dataHora||'<span class="sem-resp">não respondida</span>'}</td>
+      <td class="col-desc">${t.observacao||'<span class="sem-resp">—</span>'}</td>
+      <td>${fotoCel}</td>
+    </tr>`;
+  });
+  sec.innerHTML=`
+    <div class="secao-titulo">${nome} — Acompanhamento</div>
+    <div class="resumo-loja">
+      <div class="mini-kpi"><div class="r">Execução</div>
+        <div class="v" style="color:${corExec(p.exec)}">${p.exec}%</div></div>
+      <div class="mini-kpi"><div class="r">Feitas</div>
+        <div class="v" style="color:var(--feito)">${p.qFeito}</div></div>
+      <div class="mini-kpi"><div class="r">Não feitas</div>
+        <div class="v" style="color:var(--naofeito)">${p.qNao}</div></div>
+      <div class="mini-kpi"><div class="r">Sem resposta</div>
+        <div class="v" style="color:var(--pendente)">${p.qSem}</div></div>
+      <div class="mini-kpi"><div class="r">Medalha Projetada</div>
+        <div class="v"><span class="badge ${cls}">${med}</span></div></div>
+    </div>
+    <div class="tabela-wrap">
+      <table><thead><tr>
+        <th>Ação</th><th>Descrição</th><th>Categoria</th><th>Responsável</th>
+        <th>Prazo</th><th>Status</th><th>Respondido por</th>
+        <th>Data/Hora Resposta</th><th>Observação</th><th>Foto</th>
+      </tr></thead><tbody>${linhas}</tbody></table>
+    </div>`;
+}
+
+function abrirFoto(url){
+  $('modal-img').src=url;
+  $('modal-foto').classList.add('aberto');
+}
+
+/* atualiza sozinho a cada 60 segundos */
+carregar();
+setInterval(carregar, 60000);
+</script>
+</body>
+</html>
