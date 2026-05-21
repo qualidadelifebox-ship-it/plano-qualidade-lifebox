@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Ação — Resposta da Loja · Lifebox</title>
+<style>
+  :root{
+    --verde:#0f5132; --verde-claro:#198754; --verde-bg:#e8f3ec;
+    --tinta:#1a1f1c; --papel:#f4f1ea; --cartao:#fff; --borda:#d8d4c8;
+    --suave:#f9f7f2; --pendente:#b54a3a; --feito:#198754; --naofeito:#c8901f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',-apple-system,Roboto,sans-serif;
+    background:var(--papel);color:var(--tinta);font-size:15px;line-height:1.5;
+    padding-bottom:40px;}
+  header{background:linear-gradient(135deg,#0f5132,#1a6e44);color:#fff;
+    padding:20px;display:flex;align-items:center;gap:14px;}
+  .logo{width:44px;height:44px;border-radius:11px;background:#fff;color:var(--verde);
+    display:flex;align-items:center;justify-content:center;font-weight:800;
+    font-size:19px;flex-shrink:0;}
+  header h1{font-size:17px;font-weight:700}
+  header p{font-size:12px;opacity:.85}
+  main{max-width:680px;margin:0 auto;padding:18px;}
+  .bloco{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;
+    padding:18px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+  label.campo{display:block;font-size:12px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.5px;color:#73776f;margin-bottom:6px;}
+  select.loja,input.nome{width:100%;padding:12px;border:1.5px solid var(--borda);
+    border-radius:10px;font-size:15px;font-family:inherit;background:var(--suave);}
+  .info-loja{font-size:13px;color:#73776f;margin-top:10px;}
+  .tarefa{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;
+    padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+  .tarefa h3{font-size:15px;color:var(--verde);margin-bottom:3px;}
+  .tarefa .desc{font-size:13px;color:#4a4e49;margin-bottom:4px;}
+  .tarefa .meta{font-size:11.5px;color:#8a8d85;margin-bottom:12px;}
+  .status-atual{display:inline-block;padding:3px 10px;border-radius:20px;
+    font-size:10.5px;font-weight:700;text-transform:uppercase;margin-bottom:10px;}
+  .sa-Pendente{background:#f7dcd7;color:#9a3527}
+  .sa-Feito{background:#d9f0e3;color:#0f5132}
+  .sa-Nao-feito{background:#faf2d4;color:#9a7b14}
+  .botoes-st{display:flex;gap:8px;margin-bottom:12px;}
+  .botoes-st button{flex:1;padding:11px;border:2px solid var(--borda);
+    border-radius:10px;background:#fff;font-size:13.5px;font-weight:700;
+    cursor:pointer;font-family:inherit;transition:all .15s;color:#73776f;}
+  .botoes-st button.sel-feito{background:var(--feito);color:#fff;border-color:var(--feito)}
+  .botoes-st button.sel-naofeito{background:var(--naofeito);color:#fff;border-color:var(--naofeito)}
+  textarea.obs{width:100%;border:1.5px solid var(--borda);border-radius:10px;
+    padding:10px;font-size:14px;font-family:inherit;resize:vertical;min-height:54px;
+    background:var(--suave);margin-bottom:10px;}
+  .foto-area{margin-bottom:12px;}
+  .foto-btn{display:inline-block;padding:9px 14px;border:1.5px dashed var(--verde-claro);
+    border-radius:10px;background:var(--verde-bg);color:var(--verde);
+    font-weight:700;font-size:13px;cursor:pointer;}
+  .foto-preview{margin-top:8px;max-width:140px;max-height:100px;border-radius:8px;
+    border:1px solid var(--borda);display:block;}
+  .foto-status{font-size:11.5px;color:#8a8d85;margin-top:4px;}
+  .btn-enviar{width:100%;padding:12px;background:var(--verde);color:#fff;border:none;
+    border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .btn-enviar:disabled{opacity:.5;cursor:not-allowed;}
+  .resp-info{font-size:11.5px;color:#8a8d85;margin-top:8px;}
+  .aviso{padding:14px;border-radius:10px;font-size:13.5px;margin-bottom:14px;}
+  .aviso-ok{background:#d9f0e3;color:#0f5132;border:1px solid #9fd9b8;}
+  .aviso-erro{background:#f7dcd7;color:#9a3527;border:1px solid #e5b0a8;}
+  .aviso-carregando{background:#faf2d4;color:#9a7b14;border:1px solid #e8d48a;}
+  .vazio{text-align:center;color:#8a8d85;padding:30px;font-size:14px;}
+  footer{text-align:center;font-size:11px;color:#9a9d96;padding:20px;}
+  .config-aviso{background:#fff3cd;border:1px solid #ffd966;color:#856404;
+    padding:12px;border-radius:10px;font-size:12.5px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">LB</div>
+  <div>
+    <h1>Plano de Ação de Qualidade</h1>
+    <p>Resposta da Loja · Lifebox Brasil</p>
+  </div>
+</header>
+
+<main>
+  <div id="config-aviso" class="config-aviso" style="display:none">
+    ⚠ Este sistema ainda não foi conectado. Quem montou precisa colar o link do
+    Apps Script no lugar indicado dentro do arquivo.
+  </div>
+
+  <div class="bloco">
+    <label class="campo">Selecione a sua loja</label>
+    <select class="loja" id="seletor-loja">
+      <option value="">— Escolha a loja —</option>
+    </select>
+    <label class="campo" style="margin-top:14px">Seu nome (quem está respondendo)</label>
+    <input class="nome" id="nome-pessoa" type="text" placeholder="Digite seu nome">
+    <div class="info-loja" id="info-loja"></div>
+  </div>
+
+  <div id="area-avisos"></div>
+  <div id="lista-tarefas"></div>
+</main>
+
+<footer>Lifebox Brasil · Departamento de Qualidade · Plano de Ação 2026</footer>
+
+<script>
+/* =====================================================================
+   >>> COLE AQUI O LINK DO APPS SCRIPT <<<
+   Troque o texto entre aspas pelo link que termina em /exec
+   (você pega esse link ao "Implantar" o Apps Script - veja o manual).
+   ===================================================================== */
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxuF645LEHg3wsH6XkEVq33NeZPWDa_wX0Xyw-prYW6VUk8Mct4yj084FpiYIxOvILR/exec";
+/* ===================================================================== */
+
+let TODAS = [];
+let lojaAtual = '';
+
+const $ = id => document.getElementById(id);
+
+function aviso(texto, tipo){
+  $('area-avisos').innerHTML =
+    '<div class="aviso aviso-'+tipo+'">'+texto+'</div>';
+}
+function limparAviso(){ $('area-avisos').innerHTML=''; }
+
+/* ---- carrega as tarefas do Apps Script ---- */
+async function carregar(){
+  if(URL_SCRIPT.indexOf('COLE_AQUI')===0){
+    $('config-aviso').style.display='block';
+    return;
+  }
+  aviso('Carregando tarefas...', 'carregando');
+  try{
+    const r = await fetch(URL_SCRIPT+'?acao=listar');
+    const j = await r.json();
+    if(!j.ok){ aviso('Erro: '+j.erro,'erro'); return; }
+    TODAS = j.dados;
+    montarSeletor();
+    limparAviso();
+  }catch(e){
+    aviso('Não foi possível conectar. Verifique o link do Apps Script.','erro');
+  }
+}
+
+/* ---- monta a lista de lojas ---- */
+function montarSeletor(){
+  const lojas = [...new Set(TODAS.map(t=>t.unidade))];
+  const sel = $('seletor-loja');
+  lojas.forEach(l=>{
+    const o=document.createElement('option');
+    o.value=l; o.textContent=l;
+    sel.appendChild(o);
+  });
+  sel.onchange = ()=>{ lojaAtual=sel.value; mostrarTarefas(); };
+}
+
+/* ---- mostra as tarefas da loja escolhida ---- */
+function mostrarTarefas(){
+  const cont = $('lista-tarefas');
+  if(!lojaAtual){ cont.innerHTML=''; $('info-loja').textContent=''; return; }
+  const its = TODAS.filter(t=>t.unidade===lojaAtual);
+  const feitas = its.filter(t=>t.status==='Feito').length;
+  $('info-loja').textContent =
+    its.length+' tarefas nesta loja · '+feitas+' marcadas como feitas';
+
+  let html='';
+  its.forEach(t=>{
+    const stClass = (t.status||'Pendente').replace(/\s+/g,'-');
+    html+=`
+    <div class="tarefa" data-id="${t.id}">
+      <h3>${t.acao}</h3>
+      <div class="desc">${t.descricao}</div>
+      <div class="meta">${t.categoria} · ${t.frequencia} · Prazo: ${t.prazo}</div>
+      <span class="status-atual sa-${stClass}">Status atual: ${t.status||'Pendente'}</span>
+      <div class="botoes-st">
+        <button type="button" data-st="Feito"
+          onclick="escolherStatus('${t.id}','Feito')">✔ Foi feita</button>
+        <button type="button" data-st="Nao feito"
+          onclick="escolherStatus('${t.id}','Nao feito')">✕ Não foi feita</button>
+      </div>
+      <textarea class="obs" placeholder="Observação (opcional)">${t.observacao||''}</textarea>
+      <div class="foto-area">
+        <label class="foto-btn">📷 Anexar foto (opcional)
+          <input type="file" accept="image/*" style="display:none"
+            onchange="anexarFoto('${t.id}',this)"></label>
+        <div class="foto-status" id="fs-${t.id}"></div>
+      </div>
+      <button class="btn-enviar" onclick="enviar('${t.id}')">Enviar resposta</button>
+      ${t.dataHora?'<div class="resp-info">Última resposta: '+t.dataHora+
+        (t.respondidoPor?' por '+t.respondidoPor:'')+'</div>':''}
+    </div>`;
+  });
+  cont.innerHTML = html || '<div class="vazio">Nenhuma tarefa para esta loja.</div>';
+}
+
+/* ---- guarda o status escolhido e a foto na memória ---- */
+const escolhas = {};
+function escolherStatus(id,st){
+  escolhas[id] = escolhas[id]||{};
+  escolhas[id].status = st;
+  const card = document.querySelector('.tarefa[data-id="'+id+'"]');
+  card.querySelectorAll('.botoes-st button').forEach(b=>{
+    b.className='';
+    if(b.dataset.st===st){
+      b.className = st==='Feito'?'sel-feito':'sel-naofeito';
+    }
+  });
+}
+function anexarFoto(id,input){
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    escolhas[id]=escolhas[id]||{};
+    escolhas[id].foto=e.target.result;
+    $('fs-'+id).textContent='Foto pronta para enviar ✔';
+  };
+  r.readAsDataURL(f);
+}
+
+/* ---- envia a resposta para o Apps Script ---- */
+async function enviar(id){
+  const nome = $('nome-pessoa').value.trim();
+  if(!nome){ aviso('Por favor, digite o seu nome antes de enviar.','erro');
+    window.scrollTo(0,0); return; }
+  const esc = escolhas[id]||{};
+  if(!esc.status){ aviso('Escolha "Foi feita" ou "Não foi feita" para esta tarefa.','erro');
+    return; }
+  const card = document.querySelector('.tarefa[data-id="'+id+'"]');
+  const obs = card.querySelector('.obs').value;
+  const btn = card.querySelector('.btn-enviar');
+  btn.disabled=true; btn.textContent='Enviando...';
+
+  const pacote = {
+    id:id, unidade:lojaAtual, status:esc.status,
+    respondidoPor:nome, observacao:obs, foto:esc.foto||''
+  };
+
+  try{
+    const r = await fetch(URL_SCRIPT,{
+      method:'POST',
+      body:JSON.stringify(pacote)
+    });
+    const j = await r.json();
+    if(j.ok){
+      aviso('Resposta enviada com sucesso! Registrada em '+j.dataHora+'.','ok');
+      window.scrollTo(0,0);
+      await carregarSilencioso();
+    }else{
+      aviso('Erro ao enviar: '+j.erro,'erro');
+      btn.disabled=false; btn.textContent='Enviar resposta';
+    }
+  }catch(e){
+    aviso('Falha de conexão ao enviar. Tente novamente.','erro');
+    btn.disabled=false; btn.textContent='Enviar resposta';
+  }
+}
+
+/* recarrega os dados sem mexer na tela inteira */
+async function carregarSilencioso(){
+  try{
+    const r = await fetch(URL_SCRIPT+'?acao=listar');
+    const j = await r.json();
+    if(j.ok){ TODAS=j.dados; mostrarTarefas(); }
+  }catch(e){}
+}
+
+carregar();
+</script>
+</body>
+</html>
