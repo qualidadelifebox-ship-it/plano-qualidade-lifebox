@@ -7,7 +7,6 @@
 <style>
   :root{
     --verde:#0f5132; --verde-claro:#198754; --verde-bg:#e8f3ec;
-    --ouro:#c8a02e; --prata:#8a8d91; --bronze:#a9663d;
     --tinta:#1a1f1c; --papel:#f4f1ea; --cartao:#fff; --borda:#d8d4c8;
     --suave:#f9f7f2; --pendente:#b54a3a; --feito:#198754; --naofeito:#c8901f;
   }
@@ -30,10 +29,18 @@
   select.loja,input.nome{width:100%;padding:12px;border:1.5px solid var(--borda);
     border-radius:10px;font-size:15px;font-family:inherit;background:var(--suave);}
 
+  /* SELETOR DE SEMANA */
+  .semanas-tabs{display:flex;gap:6px;margin-top:6px;}
+  .semanas-tabs button{flex:1;padding:11px 4px;border:2px solid var(--borda);
+    border-radius:10px;background:#fff;font-size:13px;font-weight:700;
+    cursor:pointer;font-family:inherit;color:#73776f;}
+  .semanas-tabs button.ativa{background:var(--verde);color:#fff;border-color:var(--verde)}
+  .semana-info{font-size:11.5px;color:#8a8d85;margin-top:8px;text-align:center;}
+
   /* PAINEL DA LOJA */
   .painel-loja{background:var(--cartao);border:1px solid var(--borda);
-    border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);
-    display:none;}
+    border-radius:14px;padding:16px;margin-bottom:16px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);display:none;}
   .painel-loja.ativo{display:block;}
   .painel-topo{display:flex;justify-content:space-between;align-items:center;
     margin-bottom:12px;flex-wrap:wrap;gap:8px;}
@@ -50,8 +57,7 @@
   .pcard .pv{font-size:22px;font-weight:800;line-height:1;}
   .pcard .pr{font-size:10px;text-transform:uppercase;letter-spacing:.3px;
     color:#73776f;font-weight:700;margin-top:4px;}
-  .barra-exec{height:14px;background:#eceae2;border-radius:8px;overflow:hidden;
-    position:relative;}
+  .barra-exec{height:14px;background:#eceae2;border-radius:8px;overflow:hidden;}
   .barra-exec span{display:block;height:100%;border-radius:8px;transition:width .5s;}
   .barra-label{font-size:11.5px;color:#73776f;margin-top:6px;text-align:center;}
 
@@ -60,7 +66,15 @@
     transition:all .3s;}
   .tarefa h3{font-size:15px;color:var(--verde);margin-bottom:3px;}
   .tarefa .desc{font-size:13px;color:#4a4e49;margin-bottom:4px;}
-  .tarefa .meta{font-size:11.5px;color:#8a8d85;margin-bottom:12px;}
+  .tarefa .meta{font-size:11.5px;color:#8a8d85;margin-bottom:10px;}
+  /* mini-historico das 4 semanas */
+  .semanas-mini{display:flex;gap:5px;margin-bottom:12px;}
+  .smini{flex:1;text-align:center;padding:5px 2px;border-radius:7px;font-size:10px;
+    font-weight:700;border:1px solid var(--borda);background:var(--suave);color:#a0a39b;}
+  .smini.feito{background:#d9f0e3;color:#0f5132;border-color:#9fd9b8;}
+  .smini.naofeito{background:#faf2d4;color:#9a7b14;border-color:#e8d48a;}
+  .smini.atual{outline:2px solid var(--verde);outline-offset:1px;}
+  .smini b{display:block;font-size:12px;}
   .status-atual{display:inline-block;padding:3px 10px;border-radius:20px;
     font-size:10.5px;font-weight:700;text-transform:uppercase;margin-bottom:10px;}
   .sa-Pendente{background:#f7dcd7;color:#9a3527}
@@ -85,7 +99,6 @@
   .btn-enviar:disabled{opacity:.5;cursor:not-allowed;}
   .resp-info{font-size:11.5px;color:#8a8d85;margin-top:8px;}
 
-  /* TAREFA MINIMIZADA (respondida) */
   .tarefa.minimizada{padding:12px 16px;background:var(--suave);}
   .tarefa.minimizada .corpo-tarefa{display:none;}
   .tarefa.minimizada .resumo-mini{display:flex;}
@@ -128,8 +141,7 @@
 
 <main>
   <div id="config-aviso" class="config-aviso" style="display:none">
-    ⚠ Este sistema ainda não foi conectado. Quem montou precisa colar o link do
-    Apps Script no lugar indicado dentro do arquivo.
+    ⚠ Este sistema ainda não foi conectado.
   </div>
 
   <div class="bloco">
@@ -139,9 +151,17 @@
     </select>
     <label class="campo" style="margin-top:14px">Seu nome (quem está respondendo)</label>
     <input class="nome" id="nome-pessoa" type="text" placeholder="Digite seu nome">
+    <label class="campo" style="margin-top:14px">Semana que você está respondendo</label>
+    <div class="semanas-tabs" id="semanas-tabs">
+      <button data-s="S1" class="ativa" onclick="escolherSemana('S1')">Semana 1</button>
+      <button data-s="S2" onclick="escolherSemana('S2')">Semana 2</button>
+      <button data-s="S3" onclick="escolherSemana('S3')">Semana 3</button>
+      <button data-s="S4" onclick="escolherSemana('S4')">Semana 4</button>
+    </div>
+    <div class="semana-info">As respostas são por semana (segunda a sexta).
+      Marque a semana correta antes de responder.</div>
   </div>
 
-  <!-- PAINEL DA LOJA -->
   <div class="painel-loja" id="painel-loja">
     <div class="painel-topo">
       <h2 id="painel-nome">—</h2>
@@ -168,24 +188,19 @@
 <footer>Lifebox Brasil · Departamento de Qualidade · Plano de Ação 2026</footer>
 
 <script>
-/* =====================================================================
-   LINK DO APPS SCRIPT (já configurado)
-   ===================================================================== */
 const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxuF645LEHg3wsH6XkEVq33NeZPWDa_wX0Xyw-prYW6VUk8Mct4yj084FpiYIxOvILR/exec";
-/* ===================================================================== */
 
 let TODAS = [];
 let lojaAtual = '';
+let semanaAtual = 'S1';
 const escolhas = {};
+const NOME_SEM = {S1:'Semana 1',S2:'Semana 2',S3:'Semana 3',S4:'Semana 4'};
 const $ = id => document.getElementById(id);
 
-function aviso(texto, tipo){
-  $('area-avisos').innerHTML =
-    '<div class="aviso aviso-'+tipo+'">'+texto+'</div>';
-}
+function aviso(t,tipo){ $('area-avisos').innerHTML=
+  '<div class="aviso aviso-'+tipo+'">'+t+'</div>'; }
 function limparAviso(){ $('area-avisos').innerHTML=''; }
 
-/* ---- nivel da medalha ---- */
 function medalha(p){
   if(p>=90)return['Ouro','m-ouro'];
   if(p>=85)return['Prata','m-prata'];
@@ -198,7 +213,6 @@ function corExec(p){
   return'var(--pendente)';
 }
 
-/* ---- carrega tarefas ---- */
 async function carregar(){
   if(URL_SCRIPT.indexOf('COLE_AQUI')===0){
     $('config-aviso').style.display='block'; return;
@@ -228,77 +242,93 @@ function montarSeletor(){
   sel.onchange = ()=>{ lojaAtual=sel.value; mostrarTarefas(); };
 }
 
-/* ---- atualiza o painel da loja ---- */
+function escolherSemana(s){
+  semanaAtual = s;
+  $('semanas-tabs').querySelectorAll('button').forEach(b=>{
+    b.classList.toggle('ativa', b.dataset.s===s);
+  });
+  if(lojaAtual) mostrarTarefas();
+}
+
+/* dados de uma tarefa NA SEMANA escolhida */
+function semDe(t,s){ return (t.semanas && t.semanas[s]) ? t.semanas[s] :
+  {status:'Pendente',respPor:'',obs:'',foto:'',dataHora:''}; }
+
 function atualizarPainel(){
   if(!lojaAtual){ $('painel-loja').classList.remove('ativo'); return; }
   const its = TODAS.filter(t=>t.unidade===lojaAtual);
   let f=0,n=0,s=0;
   its.forEach(t=>{
-    if(t.status==='Feito')f++;
-    else if(t.status==='Nao feito')n++;
+    const st = semDe(t,semanaAtual).status;
+    if(st==='Feito')f++;
+    else if(st==='Nao feito')n++;
     else s++;
   });
   const exec = its.length ? Math.round(f/its.length*100) : 0;
   const [med,cls] = medalha(exec);
-
-  $('painel-nome').textContent = lojaAtual;
+  $('painel-nome').textContent = lojaAtual+' · '+NOME_SEM[semanaAtual];
   $('pv-feito').textContent = f;
   $('pv-naofeito').textContent = n;
   $('pv-semresp').textContent = s;
   $('pv-total').textContent = its.length;
   $('barra-exec-span').style.width = exec+'%';
   $('barra-exec-span').style.background = corExec(exec);
-  $('barra-label').textContent = 'Execução: '+exec+'%';
+  $('barra-label').textContent = 'Execução na '+NOME_SEM[semanaAtual]+': '+exec+'%';
   const m = $('painel-medalha');
   m.textContent = med+' · '+exec+'%';
   m.className = 'medalha '+cls;
   $('painel-loja').classList.add('ativo');
 }
 
-/* ---- mostra as tarefas ---- */
 function mostrarTarefas(){
   const cont = $('lista-tarefas');
   if(!lojaAtual){ cont.innerHTML=''; $('painel-loja').classList.remove('ativo'); return; }
   atualizarPainel();
 
   const its = TODAS.filter(t=>t.unidade===lojaAtual);
-  const pendentes = its.filter(t=>(t.status||'Pendente')==='Pendente');
-  const respondidas = its.filter(t=>(t.status||'Pendente')!=='Pendente');
+  const pendentes = its.filter(t=>semDe(t,semanaAtual).status==='Pendente');
+  const respondidas = its.filter(t=>semDe(t,semanaAtual).status!=='Pendente');
 
   let html='';
-
   if(pendentes.length===0 && its.length>0){
-    html+='<div class="tudo-feito">✔ Todas as tarefas desta loja já foram respondidas!</div>';
+    html+='<div class="tudo-feito">✔ Todas as tarefas da '+NOME_SEM[semanaAtual]+
+      ' já foram respondidas!</div>';
   }
-
-  /* primeiro as pendentes (abertas) */
   if(pendentes.length>0){
-    html+='<div class="secao-label">Tarefas a responder ('+pendentes.length+')</div>';
+    html+='<div class="secao-label">A responder na '+NOME_SEM[semanaAtual]+
+      ' ('+pendentes.length+')</div>';
     pendentes.forEach(t=>{ html+=cardTarefa(t,false); });
   }
-
-  /* depois as respondidas (minimizadas) */
   if(respondidas.length>0){
-    html+='<div class="secao-label">Já respondidas ('+respondidas.length+
-      ') — toque para abrir</div>';
+    html+='<div class="secao-label">Já respondidas nesta semana ('+
+      respondidas.length+') — toque para abrir</div>';
     respondidas.forEach(t=>{ html+=cardTarefa(t,true); });
   }
-
   cont.innerHTML = html || '<div class="vazio">Nenhuma tarefa para esta loja.</div>';
 }
 
-/* ---- monta um card de tarefa ---- */
 function cardTarefa(t, minimizada){
-  const stClass = (t.status||'Pendente').replace(/\s+/g,'-');
-  const ciClass = t.status==='Feito'?'ci-feito':'ci-naofeito';
-  const ciIcon = t.status==='Feito'?'✔':'✕';
+  const sem = semDe(t,semanaAtual);
+  const stClass = (sem.status||'Pendente').replace(/\s+/g,'-');
+  const ciClass = sem.status==='Feito'?'ci-feito':'ci-naofeito';
+  const ciIcon = sem.status==='Feito'?'✔':'✕';
+  /* mini-historico das 4 semanas */
+  let mini='';
+  ['S1','S2','S3','S4'].forEach(s=>{
+    const ss=semDe(t,s);
+    let cl=''; let txt='—';
+    if(ss.status==='Feito'){cl='feito';txt='✔';}
+    else if(ss.status==='Nao feito'){cl='naofeito';txt='✕';}
+    if(s===semanaAtual)cl+=' atual';
+    mini+='<div class="smini '+cl+'">'+s.replace('S','Sem ')+'<b>'+txt+'</b></div>';
+  });
   return `
   <div class="tarefa ${minimizada?'minimizada':''}" data-id="${t.id}">
     <div class="resumo-mini" onclick="expandir('${t.id}')">
       <div class="check-icon ${ciClass}">${ciIcon}</div>
       <div class="mini-texto">
         <div class="mini-titulo">${t.acao}</div>
-        <div class="mini-sub">${t.status} · ${t.dataHora||''}${t.respondidoPor?' · '+t.respondidoPor:''}</div>
+        <div class="mini-sub">${sem.status} · ${sem.dataHora||''}${sem.respPor?' · '+sem.respPor:''}</div>
       </div>
       <div class="expandir">abrir ▾</div>
     </div>
@@ -306,14 +336,15 @@ function cardTarefa(t, minimizada){
       <h3>${t.acao}</h3>
       <div class="desc">${t.descricao}</div>
       <div class="meta">${t.categoria} · ${t.frequencia} · Prazo: ${t.prazo}</div>
-      <span class="status-atual sa-${stClass}">Status atual: ${t.status||'Pendente'}</span>
+      <div class="semanas-mini">${mini}</div>
+      <span class="status-atual sa-${stClass}">${NOME_SEM[semanaAtual]}: ${sem.status||'Pendente'}</span>
       <div class="botoes-st">
         <button type="button" data-st="Feito"
           onclick="escolherStatus('${t.id}','Feito')">✔ Foi feita</button>
         <button type="button" data-st="Nao feito"
           onclick="escolherStatus('${t.id}','Nao feito')">✕ Não foi feita</button>
       </div>
-      <textarea class="obs" placeholder="Observação (opcional)">${t.observacao||''}</textarea>
+      <textarea class="obs" placeholder="Observação desta semana (opcional)">${sem.obs||''}</textarea>
       <div class="foto-area">
         <label class="foto-btn">📷 Anexar foto (opcional)
           <input type="file" accept="image/*" style="display:none"
@@ -321,20 +352,17 @@ function cardTarefa(t, minimizada){
         <div class="foto-status" id="fs-${t.id}"></div>
       </div>
       <button class="btn-enviar" onclick="enviar('${t.id}')">
-        ${minimizada?'Atualizar resposta':'Enviar resposta'}</button>
-      ${t.dataHora?'<div class="resp-info">Última resposta: '+t.dataHora+
-        (t.respondidoPor?' por '+t.respondidoPor:'')+'</div>':''}
+        ${minimizada?'Atualizar resposta da semana':'Enviar resposta da semana'}</button>
+      ${sem.dataHora?'<div class="resp-info">Resposta desta semana: '+sem.dataHora+
+        (sem.respPor?' por '+sem.respPor:'')+'</div>':''}
     </div>
   </div>`;
 }
 
-/* ---- expande uma tarefa minimizada ---- */
 function expandir(id){
   const card = document.querySelector('.tarefa[data-id="'+id+'"]');
   if(card) card.classList.remove('minimizada');
 }
-
-/* ---- escolhas do usuario ---- */
 function escolherStatus(id,st){
   escolhas[id] = escolhas[id]||{};
   escolhas[id].status = st;
@@ -357,10 +385,9 @@ function anexarFoto(id,input){
   r.readAsDataURL(f);
 }
 
-/* ---- envia a resposta ---- */
 async function enviar(id){
   const nome = $('nome-pessoa').value.trim();
-  if(!nome){ aviso('Por favor, digite o seu nome antes de enviar.','erro');
+  if(!nome){ aviso('Digite o seu nome antes de enviar.','erro');
     window.scrollTo(0,0); return; }
   const esc = escolhas[id]||{};
   if(!esc.status){
@@ -373,7 +400,7 @@ async function enviar(id){
   btn.disabled=true; btn.textContent='Enviando...';
 
   const pacote = {
-    id:id, unidade:lojaAtual, status:esc.status,
+    id:id, unidade:lojaAtual, semana:semanaAtual, status:esc.status,
     respondidoPor:nome, observacao:obs, foto:esc.foto||''
   };
 
@@ -381,18 +408,18 @@ async function enviar(id){
     const r = await fetch(URL_SCRIPT,{ method:'POST', body:JSON.stringify(pacote) });
     const j = await r.json();
     if(j.ok){
-      aviso('Resposta enviada! Registrada em '+j.dataHora+'. '+
-        'A tarefa foi movida para "já respondidas".','ok');
+      aviso('Resposta da '+NOME_SEM[semanaAtual]+
+        ' enviada! Registrada em '+j.dataHora+'.','ok');
       delete escolhas[id];
       await carregarSilencioso();
       window.scrollTo(0,0);
     }else{
       aviso('Erro ao enviar: '+j.erro,'erro');
-      btn.disabled=false; btn.textContent='Enviar resposta';
+      btn.disabled=false; btn.textContent='Enviar resposta da semana';
     }
   }catch(e){
     aviso('Falha de conexão ao enviar. Tente novamente.','erro');
-    btn.disabled=false; btn.textContent='Enviar resposta';
+    btn.disabled=false; btn.textContent='Enviar resposta da semana';
   }
 }
 
