@@ -128,6 +128,7 @@
   .sem-obs{font-size:9.5px;color:#6b6f6c;margin-top:3px;font-style:italic;}
   .vazio-cel{color:#c0c3bb;font-size:11px;}
   .aviso{padding:14px;border-radius:10px;font-size:13.5px;margin-bottom:14px}
+  .aviso-ok{background:#d9f0e3;color:#0f5132;border:1px solid #9fd9b8}
   .aviso-erro{background:#f7dcd7;color:#9a3527;border:1px solid #e5b0a8}
   .aviso-carregando{background:#faf2d4;color:#9a7b14;border:1px solid #e8d48a}
   .config-aviso{background:#fff3cd;border:1px solid #ffd966;color:#856404;
@@ -155,12 +156,79 @@
   .rel-copiar{background:var(--verde);color:#fff;}
   .rel-baixar{background:var(--ouro);color:#fff;}
   .rel-fechar{background:#e8e6de;color:#4a4e49;}
+  .btn-fechar-mes{padding:9px 16px;background:#8a4f2c;color:#fff;border:none;
+    border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;
+    font-family:inherit;}
+  .aviso-virada{margin:0 32px;margin-top:14px;padding:14px 18px;border-radius:10px;
+    background:#fff3cd;border:1px solid #ffd966;color:#856404;font-size:13px;
+    display:flex;align-items:center;gap:12px;}
+  .aviso-virada b{font-weight:700;}
+  .aviso-virada button{margin-left:auto;padding:8px 16px;background:#8a4f2c;
+    color:#fff;border:none;border-radius:8px;font-weight:700;font-size:12px;
+    cursor:pointer;font-family:inherit;white-space:nowrap;}
+
+  /* GERENCIAR TAREFAS */
+  .form-tarefa{background:var(--cartao);border:1px solid var(--borda);
+    border-radius:14px;padding:20px;box-shadow:var(--sombra);margin-bottom:20px;}
+  .form-tarefa h3{color:var(--verde);font-size:15px;margin-bottom:14px;}
+  .fg{margin-bottom:12px;}
+  .fg label{display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.4px;color:#73776f;margin-bottom:5px;}
+  .fg input,.fg select,.fg textarea{width:100%;padding:9px 11px;
+    border:1.5px solid var(--borda);border-radius:9px;font-size:13.5px;
+    font-family:inherit;background:var(--suave);}
+  .fg textarea{resize:vertical;min-height:48px;}
+  .fg-linha{display:flex;gap:12px;flex-wrap:wrap;}
+  .fg-linha .fg{flex:1;min-width:140px;}
+  .lojas-check{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:8px;}
+  .loja-chk{display:flex;align-items:center;gap:7px;padding:8px 10px;
+    border:1.5px solid var(--borda);border-radius:9px;background:var(--suave);
+    cursor:pointer;font-size:13px;}
+  .loja-chk input{width:16px;height:16px;cursor:pointer;}
+  .loja-chk.marcada{background:var(--verde-bg);border-color:var(--verde-claro);
+    color:var(--verde);font-weight:700;}
+  .btns-lojas{display:flex;gap:8px;margin-bottom:8px;}
+  .btns-lojas button{padding:5px 12px;font-size:11.5px;font-weight:700;
+    border:1px solid var(--borda);border-radius:7px;background:#fff;cursor:pointer;
+    font-family:inherit;color:#73776f;}
+  .fg-fixa{display:flex;gap:10px;}
+  .fg-fixa label{flex:1;padding:9px;border:1.5px solid var(--borda);
+    border-radius:9px;text-align:center;cursor:pointer;font-size:12.5px;
+    font-weight:700;color:#73776f;background:#fff;text-transform:none;
+    letter-spacing:0;}
+  .fg-fixa label.sel{background:var(--verde);color:#fff;border-color:var(--verde);}
+  .fg-fixa input{display:none;}
+  .btn-criar{background:var(--verde);color:#fff;border:none;border-radius:9px;
+    padding:11px 22px;font-size:13.5px;font-weight:700;cursor:pointer;
+    font-family:inherit;}
+  .lista-ger{background:var(--cartao);border:1px solid var(--borda);
+    border-radius:14px;box-shadow:var(--sombra);overflow:hidden;}
+  .lg-item{padding:13px 16px;border-bottom:1px solid #ecebe4;display:flex;
+    align-items:center;gap:12px;flex-wrap:wrap;}
+  .lg-item:last-child{border-bottom:none;}
+  .lg-texto{flex:1;min-width:200px;}
+  .lg-acao{font-weight:700;color:var(--verde);font-size:13.5px;}
+  .lg-sub{font-size:11.5px;color:#8a8d85;}
+  .lg-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;
+    font-weight:700;margin-right:4px;}
+  .tag-loja{background:var(--verde-bg);color:var(--verde);}
+  .tag-fixa{background:#e9e3f5;color:#5b4a8a;}
+  .tag-mes{background:#faf2d4;color:#9a7b14;}
+  .lg-botoes button{padding:6px 12px;border-radius:7px;border:none;cursor:pointer;
+    font-size:11.5px;font-weight:700;font-family:inherit;margin-left:5px;}
+  .btn-edit{background:#e8e6de;color:#4a4e49;}
+  .btn-excluir{background:#f7dcd7;color:#9a3527;}
+  .filtro-ger{margin-bottom:14px;}
+  .filtro-ger select{padding:8px 12px;border:1.5px solid var(--borda);
+    border-radius:9px;font-size:13px;font-family:inherit;background:#fff;}
   #rel-conteudo{font-size:12.5px;line-height:1.7;white-space:pre-wrap;
     background:var(--suave);border:1px solid var(--borda);border-radius:10px;
     padding:16px;max-height:50vh;overflow:auto;font-family:'Segoe UI',sans-serif;}
 </style>
 </head>
 <body>
+
 
 <header>
   <div class="logo">LB</div>
@@ -175,15 +243,12 @@
 </header>
 
 <div class="barra-semana">
-  <span class="lbl">Semana em foco:</span>
-  <div class="sem-btns" id="sem-btns">
-    <button data-s="S1" class="ativa" onclick="escolherSemana('S1')">Semana 1</button>
-    <button data-s="S2" onclick="escolherSemana('S2')">Semana 2</button>
-    <button data-s="S3" onclick="escolherSemana('S3')">Semana 3</button>
-    <button data-s="S4" onclick="escolherSemana('S4')">Semana 4</button>
-  </div>
+  <span class="lbl">Mês: <b id="ciclo-rotulo" style="color:var(--verde)">—</b> · Semana:</span>
+  <div class="sem-btns" id="sem-btns"></div>
   <button class="btn-relatorio" onclick="gerarRelatorio()">📄 Gerar relatório da semana</button>
+  <button class="btn-fechar-mes" onclick="fecharMes()">🔒 Fechar o mês</button>
 </div>
+<div id="aviso-virada" class="aviso-virada" style="display:none"></div>
 
 <div id="config-aviso" class="config-aviso" style="display:none">
   ⚠ <b>Sistema não conectado.</b> Cole o link do Apps Script na linha
@@ -235,8 +300,9 @@ const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxuF645LEHg3wsH6XkEV
 
 let TODAS = [];
 let semanaFoco = 'S1';
-const SEMS = ['S1','S2','S3','S4'];
-const NOME_SEM = {S1:'Semana 1',S2:'Semana 2',S3:'Semana 3',S4:'Semana 4'};
+let SEMS = ['S1','S2','S3','S4'];
+let CICLO = {rotulo:'',semanas:[],semanaAtual:1};
+function nomeSem(s){ return 'Semana '+String(s).replace('S',''); }
 const $ = id => document.getElementById(id);
 const cssId = s => s.replace(/[^a-z0-9]/gi,'_');
 
@@ -254,6 +320,14 @@ async function carregar(){
     const j = await r.json();
     if(!j.ok){ aviso('Erro: '+j.erro,'erro'); return; }
     TODAS = j.dados;
+    if(j.lojas) LOJAS_SISTEMA = j.lojas;
+    if(j.ciclo){
+      CICLO = j.ciclo;
+      SEMS = CICLO.semanas.map(s=>'S'+s.n);
+      if(SEMS.indexOf(semanaFoco)===-1) semanaFoco='S'+CICLO.semanaAtual;
+      montarBotoesSemana();
+      mostrarAvisoVirada();
+    }
     limparAviso();
     const agora = new Date();
     $('att-info').textContent = 'Atualizado às '+
@@ -265,18 +339,79 @@ async function carregar(){
   }
 }
 
+
+/* monta os botoes de semana conforme o mes vigente */
+function montarBotoesSemana(){
+  let html='';
+  CICLO.semanas.forEach(s=>{
+    const sid='S'+s.n;
+    html+='<button data-s="'+sid+'" class="'+(sid===semanaFoco?'ativa':'')+'" '+
+      'onclick="escolherSemana(\''+sid+'\')">Sem '+s.n+'</button>';
+  });
+  document.getElementById('sem-btns').innerHTML=html;
+  const cab=document.getElementById('ciclo-rotulo');
+  if(cab) cab.textContent=CICLO.rotulo;
+}
+
+
+/* mostra o aviso quando o calendario ja passou do mes aberto */
+function mostrarAvisoVirada(){
+  const av = $('aviso-virada');
+  if(CICLO.mesAtrasado){
+    av.style.display='flex';
+    av.innerHTML='<span>⚠ <b>O mês virou.</b> O ciclo aberto ainda é '+
+      '<b>'+CICLO.rotulo+'</b>, mas o calendário já está em '+
+      '<b>'+(CICLO.rotuloCalendario||'')+'</b>. '+
+      'Quando terminar de conferir e gerar o relatório, feche o mês.</span>'+
+      '<button onclick="fecharMes()">🔒 Fechar '+CICLO.rotulo+' agora</button>';
+  }else{
+    av.style.display='none';
+  }
+}
+
+/* botao Fechar o mes: arquiva e zera */
+async function fecharMes(){
+  const msg = 'Tem certeza que deseja FECHAR o mês "'+CICLO.rotulo+'"?\n\n'+
+    'O que vai acontecer:\n'+
+    '• O mês "'+CICLO.rotulo+'" será salvo numa aba de arquivo na planilha\n'+
+    '• Todas as respostas das lojas serão zeradas\n'+
+    '• Começa um novo ciclo para o mês atual\n\n'+
+    'Dica: gere o relatório da última semana ANTES de fechar.';
+  if(!confirm(msg)) return;
+  if(!confirm('Confirmar o fechamento de "'+CICLO.rotulo+'"? '+
+    'Esta ação não pode ser desfeita.')) return;
+
+  aviso('Fechando o mês e arquivando... aguarde.','carregando');
+  try{
+    const r = await fetch(URL_SCRIPT+'?acao=fecharMes');
+    const j = await r.json();
+    if(j.ok){
+      aviso('Mês "'+j.arquivado+'" arquivado com sucesso! '+
+        'Novo ciclo: '+j.novoCiclo+'. As respostas foram zeradas.','ok');
+      setTimeout(carregar, 1500);
+    }else{
+      aviso('Erro ao fechar o mês: '+j.erro,'erro');
+    }
+  }catch(e){
+    aviso('Falha de conexão ao fechar o mês. Tente novamente.','erro');
+  }
+}
+
 function escolherSemana(s){
   semanaFoco = s;
   $('sem-btns').querySelectorAll('button').forEach(b=>{
     b.classList.toggle('ativa', b.dataset.s===s);
   });
-  $('titulo-semana').textContent = NOME_SEM[s];
+  const sa = CICLO.semanas.find(x=>'S'+x.n===s);
+  $('titulo-semana').textContent = nomeSem(s)+
+    (sa?' ('+sa.periodo+')':'');
   renderAtual();
 }
 function renderAtual(){
   const ativo = $('nav').querySelector('button.ativo');
   const t = ativo ? ativo.dataset.t : 'dashboard';
   if(t==='dashboard') renderDashboard();
+  else if(t==='gerenciar') renderGerenciar();
   else renderLoja(t);
 }
 
@@ -316,6 +451,7 @@ function montarNav(){
   const lojas=[...new Set(TODAS.map(t=>t.unidade))];
   let h='<button class="ativo" data-t="dashboard">📊 Dashboard Geral</button>';
   lojas.forEach(l=>{ h+='<button data-t="'+l+'">'+l+'</button>'; });
+  h+='<button data-t="gerenciar" style="margin-left:auto;color:#8a4f2c">⚙ Gerenciar Tarefas</button>';
   $('nav').innerHTML=h;
   $('nav').querySelectorAll('button').forEach(b=>{
     b.onclick=()=>abrir(b.dataset.t,b);
@@ -327,6 +463,11 @@ function montarNav(){
       document.querySelector('main').appendChild(sec);
     }
   });
+  if(!$('tab-gerenciar')){
+    const sg=document.createElement('section');
+    sg.className='tab'; sg.id='tab-gerenciar';
+    document.querySelector('main').appendChild(sg);
+  }
 }
 function abrir(t,btn){
   $('nav').querySelectorAll('button').forEach(x=>x.classList.remove('ativo'));
@@ -334,6 +475,8 @@ function abrir(t,btn){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('ativo'));
   if(t==='dashboard'){
     $('tab-dashboard').classList.add('ativo'); renderDashboard();
+  }else if(t==='gerenciar'){
+    $('tab-gerenciar').classList.add('ativo'); renderGerenciar();
   }else{
     $('tab-'+cssId(t)).classList.add('ativo'); renderLoja(t);
   }
@@ -353,7 +496,7 @@ function renderDashboard(){
   const respondidas=f+n;
 
   $('kpis-geral').innerHTML=`
-    <div class="kpi"><div class="rotulo">Execução — ${NOME_SEM[semanaFoco]}</div>
+    <div class="kpi"><div class="rotulo">Execução — ${nomeSem(semanaFoco)}</div>
       <div class="valor" style="color:${corExec(execMedia)}">${execMedia}%</div>
       <div class="sub">média das ${lojas.length} unidades</div></div>
     <div class="kpi"><div class="rotulo">Tarefas Feitas</div>
@@ -386,7 +529,7 @@ function renderDashboard(){
     });
     g+=`<div class="card-loja" data-loja="${l}">
       <h3>${l}</h3>
-      <div class="meta-loja">${NOME_SEM[semanaFoco]}: ${p.qFeito} feitas ·
+      <div class="meta-loja">${nomeSem(semanaFoco)}: ${p.qFeito} feitas ·
         ${p.qNao} não feitas · ${p.qSem} sem resposta</div>
       <span class="badge ${cls}">${med} — ${p.exec}%</span>
       <div class="barra"><span style="width:${p.exec}%;
@@ -443,7 +586,7 @@ function renderLoja(nome){
   sec.innerHTML=`
     <div class="secao-titulo">${nome} — Acompanhamento Semanal</div>
     <div class="resumo-loja">
-      <div class="mini-kpi"><div class="r">${NOME_SEM[semanaFoco]} — Execução</div>
+      <div class="mini-kpi"><div class="r">${nomeSem(semanaFoco)} — Execução</div>
         <div class="v" style="color:${corExec(p.exec)}">${p.exec}%</div></div>
       <div class="mini-kpi"><div class="r">Feitas</div>
         <div class="v" style="color:var(--feito)">${p.qFeito}</div></div>
@@ -451,14 +594,13 @@ function renderLoja(nome){
         <div class="v" style="color:var(--naofeito)">${p.qNao}</div></div>
       <div class="mini-kpi"><div class="r">Sem resposta</div>
         <div class="v" style="color:var(--pendente)">${p.qSem}</div></div>
-      <div class="mini-kpi"><div class="r">Medalha (${NOME_SEM[semanaFoco]})</div>
+      <div class="mini-kpi"><div class="r">Medalha (${nomeSem(semanaFoco)})</div>
         <div class="v"><span class="badge ${cls}">${med}</span></div></div>
     </div>
     <div class="tabela-wrap">
       <table><thead><tr>
         <th>Ação</th><th>Descrição</th><th>Categoria</th><th>Responsável</th><th>Prazo</th>
-        <th class="sem-col">Semana 1</th><th class="sem-col">Semana 2</th>
-        <th class="sem-col">Semana 3</th><th class="sem-col">Semana 4</th>
+        ${SEMS.map(s=>'<th class="sem-col">'+nomeSem(s)+'</th>').join('')}
       </tr></thead><tbody>${linhas}</tbody></table>
     </div>`;
 }
@@ -475,7 +617,7 @@ function gerarRelatorio(){
   const agora=new Date().toLocaleString('pt-BR');
   let txt='RELATÓRIO SEMANAL — PLANO DE AÇÃO DE QUALIDADE\n';
   txt+='Lifebox Brasil · Departamento de Qualidade\n';
-  txt+=NOME_SEM[s]+' · Gerado em '+agora+'\n';
+  txt+='Mes: '+CICLO.rotulo+' · '+nomeSem(s)+' · Gerado em '+agora+'\n';
   txt+='='.repeat(56)+'\n\n';
 
   let totF=0,totN=0,totS=0,totIt=0,somaExec=0;
@@ -518,7 +660,7 @@ function gerarRelatorio(){
 
   /* pontos de atenção: não feitas e sem resposta */
   txt+='\n'+'='.repeat(56)+'\n';
-  txt+='PONTOS DE ATENÇÃO ('+NOME_SEM[s]+')\n';
+  txt+='PONTOS DE ATENÇÃO ('+nomeSem(s)+')\n';
   let temAtencao=false;
   ranked.forEach(l=>{
     const its=TODAS.filter(t=>t.unidade===l);
@@ -533,7 +675,7 @@ function gerarRelatorio(){
   });
   if(!temAtencao)txt+='  Nenhuma tarefa marcada como "não feita".\n';
 
-  $('rel-titulo').textContent='Relatório — '+NOME_SEM[s];
+  $('rel-titulo').textContent='Relatório — '+nomeSem(s);
   $('rel-subtitulo').textContent='Gerado em '+agora+
     ' · pronto para enviar à matriz';
   $('rel-conteudo').textContent=txt;
@@ -552,8 +694,231 @@ function baixarRelatorio(){
   const blob=new Blob([t],{type:'text/plain;charset=utf-8'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='Relatorio_'+NOME_SEM[semanaFoco].replace(' ','_')+'.txt';
+  a.download='Relatorio_'+nomeSem(semanaFoco).replace(' ','_')+'.txt';
   a.click();
+}
+
+
+/* ===== GERENCIAR TAREFAS ===== */
+let LOJAS_SISTEMA = [];
+let editandoId = null;
+
+function renderGerenciar(){
+  const sec = $('tab-gerenciar');
+  let chkLojas = LOJAS_SISTEMA.map(l=>
+    '<label class="loja-chk"><input type="checkbox" value="'+l+'" '+
+    'onchange="this.parentElement.classList.toggle(\'marcada\',this.checked)">'+
+    l+'</label>').join('');
+  let cats = ['Qualidade / BPF','Seguranca Alimentar','Documentacao',
+    'Manutencao / BPF','Treinamento','Gestao','Nutricao / Qualidade',
+    'RH / Manutencao','Qualidade / Financeiro','Qualidade / Delivery',
+    'Gestao / Auditoria','Treinamento / Legal','Auditoria']
+    .map(c=>'<option>'+c+'</option>').join('');
+  let freqs = ['Diaria','Semanal','Quinzenal','Mensal','Semestral','Unica vez']
+    .map(f=>'<option>'+f+'</option>').join('');
+
+  sec.innerHTML = `
+    <div class="secao-titulo" id="titulo-form">Adicionar nova tarefa / pergunta</div>
+    <div class="form-tarefa">
+      <div class="fg">
+        <label>Ação / Pergunta *</label>
+        <input id="f-acao" placeholder="Ex: Verificar temperatura das câmaras">
+      </div>
+      <div class="fg">
+        <label>Descrição</label>
+        <textarea id="f-desc" placeholder="Detalhe o que a loja deve fazer"></textarea>
+      </div>
+      <div class="fg-linha">
+        <div class="fg"><label>Categoria</label>
+          <select id="f-cat">${cats}</select></div>
+        <div class="fg"><label>Responsável</label>
+          <input id="f-resp" placeholder="Ex: Fiscal"></div>
+      </div>
+      <div class="fg-linha">
+        <div class="fg"><label>Frequência</label>
+          <select id="f-freq">${freqs}</select></div>
+        <div class="fg"><label>Prazo</label>
+          <input id="f-prazo" placeholder="Ex: 30/06/2026 ou Contínuo"></div>
+      </div>
+      <div class="fg">
+        <label>Esta tarefa é:</label>
+        <div class="fg-fixa" id="f-fixa-grupo">
+          <label class="sel" id="lbl-fixa-sim">
+            <input type="radio" name="fixa" value="sim" checked
+              onchange="marcarFixa('sim')">Fixa (todo mês)</label>
+          <label id="lbl-fixa-nao">
+            <input type="radio" name="fixa" value="nao"
+              onchange="marcarFixa('nao')">Só deste mês</label>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Enviar esta tarefa para quais lojas? *</label>
+        <div class="btns-lojas">
+          <button onclick="marcarTodasLojas(true)">Selecionar todas</button>
+          <button onclick="marcarTodasLojas(false)">Limpar seleção</button>
+        </div>
+        <div class="lojas-check" id="f-lojas">${chkLojas}</div>
+      </div>
+      <button class="btn-criar" id="btn-salvar-tarefa" onclick="salvarTarefa()">
+        + Criar tarefa</button>
+      <button class="btn-edit" id="btn-cancelar-edicao" style="display:none;
+        margin-left:8px;padding:11px 22px;" onclick="cancelarEdicao()">
+        Cancelar edição</button>
+    </div>
+
+    <div class="secao-titulo">Tarefas existentes</div>
+    <div class="filtro-ger">
+      <select id="filtro-ger-loja" onchange="renderListaGer()">
+        <option value="">Todas as lojas</option>
+        ${LOJAS_SISTEMA.map(l=>'<option>'+l+'</option>').join('')}
+      </select>
+    </div>
+    <div class="lista-ger" id="lista-ger"></div>`;
+  renderListaGer();
+}
+
+function marcarFixa(v){
+  $('lbl-fixa-sim').classList.toggle('sel', v==='sim');
+  $('lbl-fixa-nao').classList.toggle('sel', v==='nao');
+}
+function marcarTodasLojas(marcar){
+  $('f-lojas').querySelectorAll('input').forEach(c=>{
+    c.checked=marcar;
+    c.parentElement.classList.toggle('marcada',marcar);
+  });
+}
+
+function renderListaGer(){
+  const filtro = $('filtro-ger-loja') ? $('filtro-ger-loja').value : '';
+  let its = TODAS.slice();
+  if(filtro) its = its.filter(t=>t.unidade===filtro);
+  /* agrupa por acao+loja para nao repetir, mas aqui cada linha ja e uma loja */
+  let html='';
+  if(its.length===0){
+    html='<div style="padding:20px;text-align:center;color:#8a8d85">'+
+      'Nenhuma tarefa.</div>';
+  }
+  its.forEach(t=>{
+    const fixaTag = (String(t.fixa).toLowerCase().indexOf('sim')===0)
+      ? '<span class="lg-tag tag-fixa">Fixa</span>'
+      : '<span class="lg-tag tag-mes">Só do mês</span>';
+    html+=`<div class="lg-item">
+      <div class="lg-texto">
+        <div class="lg-acao">${t.acao}</div>
+        <div class="lg-sub">${t.descricao||''}</div>
+        <div style="margin-top:4px">
+          <span class="lg-tag tag-loja">${t.unidade}</span>
+          ${fixaTag}
+          <span style="font-size:11px;color:#8a8d85">${t.categoria} · ${t.frequencia}</span>
+        </div>
+      </div>
+      <div class="lg-botoes">
+        <button class="btn-edit" onclick="abrirEdicao('${t.id}')">✎ Editar</button>
+        <button class="btn-excluir" onclick="excluirTarefa('${t.id}')">🗑 Excluir</button>
+      </div>
+    </div>`;
+  });
+  $('lista-ger').innerHTML=html;
+}
+
+async function salvarTarefa(){
+  const acao = $('f-acao').value.trim();
+  if(!acao){ alert('Digite a ação / pergunta.'); return; }
+  const lojas = [...$('f-lojas').querySelectorAll('input:checked')]
+    .map(c=>c.value);
+  if(lojas.length===0 && !editandoId){
+    alert('Escolha pelo menos uma loja.'); return;
+  }
+  const fixa = document.querySelector('input[name=fixa]:checked').value==='sim';
+  const tarefa = {
+    acao:acao, descricao:$('f-desc').value.trim(),
+    categoria:$('f-cat').value, responsavel:$('f-resp').value.trim(),
+    frequencia:$('f-freq').value, prazo:$('f-prazo').value.trim(),
+    fixa:fixa, lojas:lojas
+  };
+  const btn=$('btn-salvar-tarefa');
+  btn.disabled=true; btn.textContent='Salvando...';
+
+  const op = editandoId ? 'editarTarefa' : 'criarTarefa';
+  const corpo = {operacao:op, tarefa:tarefa};
+  if(editandoId) corpo.id = editandoId;
+
+  try{
+    const r = await fetch(URL_SCRIPT,{method:'POST',body:JSON.stringify(corpo)});
+    const j = await r.json();
+    if(j.ok){
+      alert(editandoId?'Tarefa atualizada!':
+        'Tarefa criada para '+j.criadas+' loja(s)!');
+      cancelarEdicao();
+      await carregar();
+      const btnGer=[...$('nav').querySelectorAll('button')]
+        .find(b=>b.dataset.t==='gerenciar');
+      if(btnGer) abrir('gerenciar',btnGer);
+    }else{
+      alert('Erro: '+j.erro);
+    }
+  }catch(e){ alert('Falha de conexão. Tente novamente.'); }
+  btn.disabled=false;
+  btn.textContent = editandoId?'Salvar alterações':'+ Criar tarefa';
+}
+
+function abrirEdicao(id){
+  const t = TODAS.find(x=>x.id===id);
+  if(!t) return;
+  editandoId = id;
+  $('titulo-form').textContent='Editar tarefa';
+  $('f-acao').value=t.acao;
+  $('f-desc').value=t.descricao||'';
+  $('f-cat').value=t.categoria||'Qualidade / BPF';
+  $('f-resp').value=t.responsavel||'';
+  $('f-freq').value=t.frequencia||'Semanal';
+  $('f-prazo').value=t.prazo||'';
+  const ehFixa = String(t.fixa).toLowerCase().indexOf('sim')===0;
+  document.querySelector('input[name=fixa][value='+(ehFixa?'sim':'nao')+']').checked=true;
+  marcarFixa(ehFixa?'sim':'nao');
+  $('btn-salvar-tarefa').textContent='Salvar alterações';
+  $('btn-cancelar-edicao').style.display='inline-block';
+  /* na edicao, as lojas nao mudam (cada linha e uma loja) */
+  $('f-lojas').parentElement.style.opacity='.5';
+  $('f-lojas').parentElement.style.pointerEvents='none';
+  window.scrollTo(0,0);
+}
+function cancelarEdicao(){
+  editandoId=null;
+  $('titulo-form') && ($('titulo-form').textContent='Adicionar nova tarefa / pergunta');
+  ['f-acao','f-desc','f-resp','f-prazo'].forEach(id=>{ if($(id))$(id).value=''; });
+  if($('btn-salvar-tarefa')) $('btn-salvar-tarefa').textContent='+ Criar tarefa';
+  if($('btn-cancelar-edicao')) $('btn-cancelar-edicao').style.display='none';
+  if($('f-lojas')){
+    $('f-lojas').parentElement.style.opacity='1';
+    $('f-lojas').parentElement.style.pointerEvents='auto';
+    marcarTodasLojas(false);
+  }
+}
+
+async function excluirTarefa(id){
+  const t = TODAS.find(x=>x.id===id);
+  if(!t) return;
+  let temResposta=false;
+  Object.values(t.semanas||{}).forEach(s=>{
+    if(s.status && s.status!=='Pendente') temResposta=true;
+  });
+  let msg='Excluir a tarefa "'+t.acao+'" da loja '+t.unidade+'?';
+  if(temResposta) msg+='\n\nATENÇÃO: esta tarefa já tem respostas. '+
+    'Elas serão perdidas.';
+  if(!confirm(msg)) return;
+
+  try{
+    const r = await fetch(URL_SCRIPT,{method:'POST',
+      body:JSON.stringify({operacao:'excluirTarefa',id:id})});
+    const j = await r.json();
+    if(j.ok){
+      await carregar();
+      const btnGer=[...$('nav').querySelectorAll('button')]
+        .find(b=>b.dataset.t==='gerenciar');
+      if(btnGer) abrir('gerenciar',btnGer);
+    }else{ alert('Erro: '+j.erro); }
+  }catch(e){ alert('Falha de conexão.'); }
 }
 
 carregar();
