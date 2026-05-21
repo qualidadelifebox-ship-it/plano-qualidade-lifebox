@@ -152,14 +152,8 @@
     <label class="campo" style="margin-top:14px">Seu nome (quem está respondendo)</label>
     <input class="nome" id="nome-pessoa" type="text" placeholder="Digite seu nome">
     <label class="campo" style="margin-top:14px">Semana que você está respondendo</label>
-    <div class="semanas-tabs" id="semanas-tabs">
-      <button data-s="S1" class="ativa" onclick="escolherSemana('S1')">Semana 1</button>
-      <button data-s="S2" onclick="escolherSemana('S2')">Semana 2</button>
-      <button data-s="S3" onclick="escolherSemana('S3')">Semana 3</button>
-      <button data-s="S4" onclick="escolherSemana('S4')">Semana 4</button>
-    </div>
-    <div class="semana-info">As respostas são por semana (segunda a sexta).
-      Marque a semana correta antes de responder.</div>
+    <div class="semanas-tabs" id="semanas-tabs"></div>
+    <div class="semana-info" id="info-semana-texto">As semanas seguem o mês atual.</div>
   </div>
 
   <div class="painel-loja" id="painel-loja">
@@ -193,8 +187,9 @@ const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxuF645LEHg3wsH6XkEV
 let TODAS = [];
 let lojaAtual = '';
 let semanaAtual = 'S1';
+let CICLO = {rotulo:'',semanas:[],semanaAtual:1};
 const escolhas = {};
-const NOME_SEM = {S1:'Semana 1',S2:'Semana 2',S3:'Semana 3',S4:'Semana 4'};
+function nomeSem(s){ return 'Semana '+String(s).replace('S',''); }
 const $ = id => document.getElementById(id);
 
 function aviso(t,tipo){ $('area-avisos').innerHTML=
@@ -223,6 +218,11 @@ async function carregar(){
     const j = await r.json();
     if(!j.ok){ aviso('Erro: '+j.erro,'erro'); return; }
     TODAS = j.dados;
+    if(j.ciclo){
+      CICLO = j.ciclo;
+      semanaAtual = 'S'+CICLO.semanaAtual;
+      montarSemanas();
+    }
     montarSeletor();
     limparAviso();
   }catch(e){
@@ -242,11 +242,31 @@ function montarSeletor(){
   sel.onchange = ()=>{ lojaAtual=sel.value; mostrarTarefas(); };
 }
 
+
+/* monta os botoes de semana conforme o mes vigente */
+function montarSemanas(){
+  const cont = $('semanas-tabs');
+  let html='';
+  CICLO.semanas.forEach(s=>{
+    const sid='S'+s.n;
+    html+='<button data-s="'+sid+'" class="'+(sid===semanaAtual?'ativa':'')+'" '+
+      'onclick="escolherSemana(\''+sid+'\')">Sem '+s.n+'</button>';
+  });
+  cont.innerHTML=html;
+  /* atualiza o texto informativo com o periodo */
+  const sAtual = CICLO.semanas.find(x=>'S'+x.n===semanaAtual);
+  $('info-semana-texto').textContent = CICLO.rotulo +
+    (sAtual?' · Semana '+sAtual.n+' ('+sAtual.periodo+')':'');
+}
+
 function escolherSemana(s){
   semanaAtual = s;
   $('semanas-tabs').querySelectorAll('button').forEach(b=>{
     b.classList.toggle('ativa', b.dataset.s===s);
   });
+  const sa = CICLO.semanas.find(x=>'S'+x.n===s);
+  $('info-semana-texto').textContent = CICLO.rotulo +
+    (sa?' · Semana '+sa.n+' ('+sa.periodo+')':'');
   if(lojaAtual) mostrarTarefas();
 }
 
@@ -266,14 +286,14 @@ function atualizarPainel(){
   });
   const exec = its.length ? Math.round(f/its.length*100) : 0;
   const [med,cls] = medalha(exec);
-  $('painel-nome').textContent = lojaAtual+' · '+NOME_SEM[semanaAtual];
+  $('painel-nome').textContent = lojaAtual+' · '+nomeSem(semanaAtual);
   $('pv-feito').textContent = f;
   $('pv-naofeito').textContent = n;
   $('pv-semresp').textContent = s;
   $('pv-total').textContent = its.length;
   $('barra-exec-span').style.width = exec+'%';
   $('barra-exec-span').style.background = corExec(exec);
-  $('barra-label').textContent = 'Execução na '+NOME_SEM[semanaAtual]+': '+exec+'%';
+  $('barra-label').textContent = 'Execução na '+nomeSem(semanaAtual)+': '+exec+'%';
   const m = $('painel-medalha');
   m.textContent = med+' · '+exec+'%';
   m.className = 'medalha '+cls;
@@ -291,11 +311,11 @@ function mostrarTarefas(){
 
   let html='';
   if(pendentes.length===0 && its.length>0){
-    html+='<div class="tudo-feito">✔ Todas as tarefas da '+NOME_SEM[semanaAtual]+
+    html+='<div class="tudo-feito">✔ Todas as tarefas da '+nomeSem(semanaAtual)+
       ' já foram respondidas!</div>';
   }
   if(pendentes.length>0){
-    html+='<div class="secao-label">A responder na '+NOME_SEM[semanaAtual]+
+    html+='<div class="secao-label">A responder na '+nomeSem(semanaAtual)+
       ' ('+pendentes.length+')</div>';
     pendentes.forEach(t=>{ html+=cardTarefa(t,false); });
   }
@@ -314,7 +334,7 @@ function cardTarefa(t, minimizada){
   const ciIcon = sem.status==='Feito'?'✔':'✕';
   /* mini-historico das 4 semanas */
   let mini='';
-  ['S1','S2','S3','S4'].forEach(s=>{
+  CICLO.semanas.map(x=>'S'+x.n).forEach(s=>{
     const ss=semDe(t,s);
     let cl=''; let txt='—';
     if(ss.status==='Feito'){cl='feito';txt='✔';}
@@ -337,7 +357,7 @@ function cardTarefa(t, minimizada){
       <div class="desc">${t.descricao}</div>
       <div class="meta">${t.categoria} · ${t.frequencia} · Prazo: ${t.prazo}</div>
       <div class="semanas-mini">${mini}</div>
-      <span class="status-atual sa-${stClass}">${NOME_SEM[semanaAtual]}: ${sem.status||'Pendente'}</span>
+      <span class="status-atual sa-${stClass}">${nomeSem(semanaAtual)}: ${sem.status||'Pendente'}</span>
       <div class="botoes-st">
         <button type="button" data-st="Feito"
           onclick="escolherStatus('${t.id}','Feito')">✔ Foi feita</button>
@@ -408,7 +428,7 @@ async function enviar(id){
     const r = await fetch(URL_SCRIPT,{ method:'POST', body:JSON.stringify(pacote) });
     const j = await r.json();
     if(j.ok){
-      aviso('Resposta da '+NOME_SEM[semanaAtual]+
+      aviso('Resposta da '+nomeSem(semanaAtual)+
         ' enviada! Registrada em '+j.dataHora+'.','ok');
       delete escolhas[id];
       await carregarSilencioso();
